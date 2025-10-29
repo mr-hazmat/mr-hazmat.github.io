@@ -1,0 +1,110 @@
+/* Basic page layout */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9fafb;
+  color: #222;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: #004aad;
+  color: white;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+header h1 {
+  margin-bottom: 0.5rem;
+}
+header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Navigation bar */
+nav {
+  background: #01337a;
+  display: flex;
+  justify-content: center;
+}
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+nav li {
+  margin: 0 1rem;
+}
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.8rem;
+  display: block;
+}
+nav a:hover {
+  background: #0059e0;
+  border-radius: 4px;
+}
+
+/* Sections */
+.section {
+  padding: 3rem 1rem;
+  max-width: 900px;
+  margin: auto;
+}
+.section h2 {
+  color: #004aad;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #004aad;
+  display: inline-block;
+  padding-bottom: 0.3rem;
+}
+
+/* Projects grid */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.project-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+.project-card h3 {
+  color: #004aad;
+  margin-top: 0;
+}
+
+/* Contact section */
+.contact-list {
+  list-style: none;
+  padding: 0;
+}
+.contact-list a {
+  color: #004aad;
+  text-decoration: none;
+}
+.contact-list a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #004aad;
+  color: white;
+  font-size: 0.9rem;
+}

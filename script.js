@@ -1,8 +1,10 @@
 // ------------------------------
 // Dynamic footer year
 // ------------------------------
-document.getElementById("year").textContent = new Date().getFullYear();
-
+const yearEl = document.getElementById("year");
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
 
 // ------------------------------
 // Hide / show header on scroll
@@ -26,26 +28,27 @@ window.addEventListener("scroll", () => {
 
 
 // ------------------------------
-// Custom smooth scroll for in-page links
+// Smooth scrolling (brute force version)
 // ------------------------------
 
-// Ease function (easeInOutQuad)
+// Easing function (easeInOutQuad)
 function easeInOutQuad(t) {
   return t < 0.5
     ? 2 * t * t
     : -1 + (4 - 2 * t) * t;
 }
 
-// Smooth scroll animation
+// Animate scroll from current position to targetY in `duration` ms
 function smoothScrollTo(targetY, duration) {
   const startY = window.scrollY;
   const distanceY = targetY - startY;
   const startTime = performance.now();
 
-  function step(currentTime) {
-    const elapsed = currentTime - startTime;
-    const t = Math.min(elapsed / duration, 1); // clamp [0,1]
+  function step(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
     const eased = easeInOutQuad(t);
+
     window.scrollTo(0, startY + distanceY * eased);
 
     if (elapsed < duration) {
@@ -56,29 +59,44 @@ function smoothScrollTo(targetY, duration) {
   requestAnimationFrame(step);
 }
 
-// Attach to all internal hash links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function (e) {
-    const targetID = this.getAttribute("href");
+// Global click handler for ANY <a href="#something">
+document.addEventListener("click", function (e) {
+  // Only care about left-click normal navigation
+  if (
+    e.target.tagName.toLowerCase() === "a" &&
+    e.target.getAttribute("href") &&
+    e.target.getAttribute("href").startsWith("#")
+  ) {
+    const href = e.target.getAttribute("href");
 
-    // ignore empty "#" links (like href="#")
-    if (!targetID || targetID === "#") return;
+    // If it's just "#", let it through (no scrolling)
+    if (href === "#") {
+      return;
+    }
 
-    const targetEl = document.querySelector(targetID);
-    if (!targetEl) return;
+    const targetEl = document.querySelector(href);
+    if (!targetEl) {
+      return;
+    }
 
-    // stop the default instant jump
+    // BLOCK default jump completely
     e.preventDefault();
 
-    // how far from the top the element is
+    // Current scroll before browser tries to snap
+    const currentScroll = window.scrollY;
+
+    // Where do we actually want to land?
     const rect = targetEl.getBoundingClientRect();
     const absoluteY = rect.top + window.scrollY;
 
-    // adjust for sticky header height so the section title isn't hidden
-    const headerHeight = header.offsetHeight || 0;
-    const finalY = absoluteY - headerHeight - 8; // small padding
+    // Account for sticky header height so the section title isn't hidden
+    const headerHeight = header ? header.offsetHeight : 0;
+    const finalY = absoluteY - headerHeight - 8;
 
-    // do the smooth scroll (400ms feels snappy but smooth)
-    smoothScrollTo(finalY, 400);
-  });
+    // Force us back to where we were (prevents "instant jump" flash)
+    window.scrollTo(0, currentScroll);
+
+    // Now animate to finalY
+    smoothScrollTo(finalY, 450);
+  }
 });

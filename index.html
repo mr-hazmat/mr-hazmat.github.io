@@ -1,104 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Portfolio | Home</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Your Name | Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
-<body>
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="container nav-content">
-      <h1 class="logo"><a href="#">My Portfolio</a></h1>
-      <ul class="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </div>
-  </nav>
 
-  <!-- Hero Section -->
+<body>
+
+  <!-- Navbar (hides on scroll down, shows on scroll up) -->
+  <header id="site-header" class="site-header">
+    <div class="nav-inner">
+      <div class="brand">
+        <a href="#home">Your Name</a>
+      </div>
+      <nav class="main-nav">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#media">Media</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero / Intro -->
   <section id="home" class="hero">
     <div class="hero-content">
-      <h2>Welcome to My STEM Portfolio</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-        Praesent porta efficitur magna, a viverra magna sagittis et. 
-        Curabitur sit amet eros sed leo consequat tincidunt.
-      </p>
-      <a href="#projects" class="btn">Explore My Projects</a>
+      <div class="hero-text">
+        <h1 class="headline">
+          Lorem ipsum headline here that describes who you are in one sentence.
+        </h1>
+        <p class="tagline">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+          fringilla lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+
+        <div class="hero-links">
+          <a class="pill-link" href="#projects">View My Work</a>
+          <a class="pill-link pill-outline" href="#contact">Get In Touch</a>
+        </div>
+      </div>
+
+      <div class="hero-photo">
+        <!-- Replace this placeholder with your own image -->
+        <img src="https://via.placeholder.com/500x500"
+             alt="Your portrait or relevant image" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Strip -->
+  <section class="quote-strip">
+    <div class="quote-card">
+      <p class="quote-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p>
+      <p class="quote-author">— Person Name</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
+      <p class="quote-author">— Another Person</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."</p>
+      <p class="quote-author">— Someone Else</p>
     </div>
   </section>
 
   <!-- About Section -->
-  <section id="about" class="section">
-    <div class="container">
-      <h2>About Me</h2>
+  <section id="about" class="section section-narrow">
+    <h2 class="section-title">About</h2>
+    <div class="text-block">
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-        Nullam commodo lacus a orci tincidunt, in malesuada nulla posuere. 
-        Donec consequat orci non dignissim euismod. Sed facilisis sagittis magna, 
-        nec tempor neque porta in. Maecenas imperdiet posuere lectus, 
-        in bibendum erat tristique vitae. Vestibulum a suscipit arcu, vel laoreet odio.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
+        elementum, lorem ac porta porttitor, ipsum lorem euismod dui, vitae
+        pellentesque arcu ipsum non nisl. Integer vel ultrices justo.
+        Suspendisse potenti. Integer nec lorem sit amet mi posuere porta.
       </p>
       <p>
-        Mauris nec est a est porttitor pretium. Integer nec dui nec urna 
-        laoreet ultricies. Aliquam erat volutpat. Suspendisse potenti. 
-        Duis accumsan porttitor felis sit amet consequat.
+        Fusce ac lorem nec tortor porttitor volutpat. Pellentesque ut
+        fermentum lorem. Phasellus dictum, lorem a convallis faucibus, ipsum
+        magna convallis lorem, dictum tincidunt eros justo a mi. Curabitur
+        varius tristique lorem, in elementum eros volutpat non.
       </p>
     </div>
   </section>
 
   <!-- Projects Section -->
-  <section id="projects" class="section alt-bg">
-    <div class="container">
-      <h2>Projects</h2>
-      <div class="project-grid">
-        <div class="project-card">
-          <img src="https://via.placeholder.com/400x250" alt="Project 1">
-          <h3>Project Title One</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget ligula nec libero feugiat porta.</p>
-          <a href="#" class="btn-small">Read More</a>
+  <section id="projects" class="section">
+    <h2 class="section-title">Projects</h2>
+
+    <div class="projects-grid">
+      <!-- Project Card 1 -->
+      <article class="project-card">
+        <div class="project-body">
+          <h3 class="project-title">Project Title One</h3>
+          <p class="project-desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+            fringilla lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </p>
+          <a class="project-link" href="#">Read more →</a>
         </div>
-        <div class="project-card">
-          <img src="https://via.placeholder.com/400x250" alt="Project 2">
-          <h3>Project Title Two</h3>
-          <p>Quisque euismod erat vel sapien tincidunt, ut imperdiet magna vulputate. Mauris suscipit sem vel felis.</p>
-          <a href="#" class="btn-small">Read More</a>
+      </article>
+
+      <!-- Project Card 2 -->
+      <article class="project-card">
+        <div class="project-body">
+          <h3 class="project-title">Project Title Two</h3>
+          <p class="project-desc">
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+          </p>
+          <a class="project-link" href="#">Read more →</a>
         </div>
-        <div class="project-card">
-          <img src="https://via.placeholder.com/400x250" alt="Project 3">
-          <h3>Project Title Three</h3>
-          <p>Vivamus commodo purus eu justo hendrerit, sit amet ultricies ligula tempus. Duis sed tincidunt justo.</p>
-          <a href="#" class="btn-small">Read More</a>
+      </article>
+
+      <!-- Project Card 3 -->
+      <article class="project-card">
+        <div class="project-body">
+          <h3 class="project-title">Project Title Three</h3>
+          <p class="project-desc">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.
+          </p>
+          <a class="project-link" href="#">Read more →</a>
         </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Media / Press / Highlights -->
+  <section id="media" class="section section-narrow">
+    <h2 class="section-title">Media / Highlights</h2>
+
+    <div class="media-list">
+      <div class="media-item">
+        <h3 class="media-headline">
+          Lorem ipsum media headline, interview, podcast, or article title
+        </h3>
+        <p class="media-meta">
+          Publication / Platform · 2025
+        </p>
+        <a class="media-link" href="#">Link to article →</a>
+      </div>
+
+      <div class="media-item">
+        <h3 class="media-headline">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        </h3>
+        <p class="media-meta">
+          Example Outlet · 2025
+        </p>
+        <a class="media-link" href="#">Link to video →</a>
+      </div>
+
+      <div class="media-item">
+        <h3 class="media-headline">
+          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        </h3>
+        <p class="media-meta">
+          Another Source · 2024
+        </p>
+        <a class="media-link" href="#">Link to post →</a>
       </div>
     </div>
   </section>
 
-  <!-- Contact Section -->
+  <!-- Contact -->
   <section id="contact" class="section">
-    <div class="container">
-      <h2>Contact</h2>
+    <h2 class="section-title">Contact</h2>
+
+    <div class="contact-card">
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-        Fusce commodo urna vitae erat suscipit, id ultricies tortor mattis.
+        Want to connect, collaborate, or ask questions? Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Aliquam erat volutpat.
       </p>
       <ul class="contact-list">
         <li>Email: <a href="mailto:example@email.com">example@email.com</a></li>
-        <li>LinkedIn: <a href="#">linkedin.com/in/yourprofile</a></li>
         <li>GitHub: <a href="#">github.com/yourusername</a></li>
+        <li>LinkedIn: <a href="#">linkedin.com/in/yourusername</a></li>
       </ul>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer>
-    <p>&copy; <span id="year"></span> My Portfolio | All rights reserved.</p>
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-name">Your Name</p>
+      <p class="footer-copy">
+        © <span id="year"></span> | Lorem ipsum dolor sit amet. Built for the web.
+      </p>
+    </div>
   </footer>
+
 </body>
 </html>

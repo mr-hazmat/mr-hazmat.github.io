@@ -1,12 +1,11 @@
-// Set current year automatically
+// Dynamically set current year
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Optional: smooth scroll for nav links
+// Smooth scroll behavior (in case browser doesn't support CSS scroll-behavior)
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    document.querySelector(this.getAttribute('href')).scrollIntoView({
-      behavior: 'smooth'
-    });
+    const target = document.querySelector(this.getAttribute('href'));
+    target.scrollIntoView({ behavior: 'smooth' });
   });
 });

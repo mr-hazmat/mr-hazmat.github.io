@@ -56,21 +56,28 @@
       <button class="quote-nav-btn" id="quote-prev" aria-label="Previous quote">‹</button>
 
       <div class="quote-track-viewport">
-        <!-- these overlays create the "fade to transparent at edges" effect -->
+        <!-- gradient fades -->
         <div class="quote-fade quote-fade-left"></div>
         <div class="quote-fade quote-fade-right"></div>
 
+        <!--
+          NOTE: We no longer rely on fixed card widths like 80%.
+          We'll center one card at a time.
+        -->
         <div class="quote-track" id="quote-track">
+          <!-- Cards will be cloned in JS for looping, so don't add clones manually -->
           <div class="quote-card">
-            <p class="quote-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p>
+            <p class="quote-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit."</p>
             <p class="quote-author">— Person Name</p>
           </div>
+
           <div class="quote-card">
-            <p class="quote-text">"Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
+            <p class="quote-text">"Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."</p>
             <p class="quote-author">— Another Person</p>
           </div>
+
           <div class="quote-card">
-            <p class="quote-text">"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."</p>
+            <p class="quote-text">"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."</p>
             <p class="quote-author">— Someone Else</p>
           </div>
         </div>
@@ -79,6 +86,7 @@
       <button class="quote-nav-btn" id="quote-next" aria-label="Next quote">›</button>
     </div>
   </section>
+
 
   <!-- About Section -->
   <section id="about" class="section section-narrow fade-section">

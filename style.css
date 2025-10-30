@@ -1,4 +1,4 @@
-
+/* Reset-ish */
 * {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
@@ -15,8 +15,7 @@ body {
   line-height: 1.5;
 }
 
-/* COLORS / THEME
-   You can tweak these in one place */
+/* THEME */
 :root {
   --bg-page: #fafafa;
   --bg-card: #ffffff;
@@ -65,17 +64,37 @@ body {
   font-size: 0.95rem;
 }
 
-.main-nav a {
+/* nav links with hover effect (fade + growing underline) */
+.main-nav .nav-link {
   color: var(--text-main);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
   margin-left: 1rem;
   position: relative;
+
+  transition: color 0.2s ease-in-out;
 }
 
-.main-nav a:hover {
+.main-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  height: 2px;
+  width: 0%;
+  background-color: var(--brand);
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: width 0.22s ease-in-out;
+}
+
+.main-nav .nav-link:hover {
   color: var(--brand);
+}
+
+.main-nav .nav-link:hover::after {
+  width: 100%;
 }
 
 /* --------------------------- */
@@ -133,6 +152,7 @@ body {
   border-radius: 999px;
   text-decoration: none;
   display: inline-block;
+  transition: opacity 0.15s ease-in-out;
 }
 
 .pill-link:hover {
@@ -155,24 +175,100 @@ body {
 }
 
 /* --------------------------- */
-/* QUOTE STRIP                 */
+/* QUOTE CAROUSEL              */
 /* --------------------------- */
 
-.quote-strip {
-  background-color: var(--bg-card);
-  border-bottom: 1px solid var(--border-soft);
-  border-top: 1px solid var(--border-soft);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
-  gap: 1rem;
+.quote-carousel-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 1.5rem 1rem;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background-color: var(--bg-card);
 }
 
+/* nav arrows */
+.quote-nav-btn {
+  appearance: none;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  width: 2rem;
+  height: 2rem;
+  color: var(--text-main);
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.quote-nav-btn:hover {
+  background-color: var(--brand-soft);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+/* viewport with fade edges */
+.quote-track-viewport {
+  position: relative;
+  overflow: hidden;
+}
+
+/* left/right gradient overlays for fade */
+.quote-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15%;
+  max-width: 150px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.quote-fade-left {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    rgba(250, 250, 250, 1) 0%,
+    rgba(250, 250, 250, 0) 80%
+  );
+}
+
+.quote-fade-right {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    rgba(250, 250, 250, 1) 0%,
+    rgba(250, 250, 250, 0) 80%
+  );
+}
+
+/* sliding row of cards */
+.quote-track {
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+  padding-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* each card ~80% width so next one peeks */
 .quote-card {
   background-color: var(--bg-accent);
   border: 1px solid var(--border-soft);
   border-radius: 8px;
   padding: 1rem 1rem 0.8rem;
+  min-width: 80%;
+  max-width: 80%;
 }
 
 .quote-text {
@@ -270,10 +366,12 @@ body {
   font-weight: 500;
   color: var(--brand);
   text-decoration: none;
+  transition: color 0.15s ease-in-out;
 }
 
 .project-link:hover {
   text-decoration: underline;
+  color: var(--brand);
 }
 
 /* --------------------------- */
@@ -313,10 +411,12 @@ body {
   font-size: 0.9rem;
   color: var(--brand);
   text-decoration: none;
+  transition: color 0.15s ease-in-out;
 }
 
 .media-link:hover {
   text-decoration: underline;
+  color: var(--brand);
 }
 
 /* --------------------------- */
@@ -353,9 +453,11 @@ body {
   color: var(--brand);
   text-decoration: none;
   word-break: break-word;
+  transition: color 0.15s ease-in-out;
 }
 .contact-list a:hover {
   text-decoration: underline;
+  color: var(--brand);
 }
 
 /* --------------------------- */
@@ -389,6 +491,22 @@ body {
 }
 
 /* --------------------------- */
+/* FADE-IN ANIMATION           */
+/* --------------------------- */
+
+.fade-section {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------- */
 /* RESPONSIVE TWEAKS           */
 /* --------------------------- */
 
@@ -416,8 +534,34 @@ body {
     max-width: 100%;
   }
 
-  .main-nav a {
+  .main-nav .nav-link {
     margin-left: 0.75rem;
     font-size: 0.85rem;
+  }
+
+  .quote-card {
+    min-width: 85%;
+    max-width: 85%;
+  }
+
+  .quote-fade {
+    width: 20%;
+    max-width: 120px;
+  }
+
+  .quote-fade-left {
+    background: linear-gradient(
+      to right,
+      rgba(250, 250, 250, 1) 0%,
+      rgba(250, 250, 250, 0) 70%
+    );
+  }
+
+  .quote-fade-right {
+    background: linear-gradient(
+      to left,
+      rgba(250, 250, 250, 1) 0%,
+      rgba(250, 250, 250, 0) 70%
+    );
   }
 }

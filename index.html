@@ -16,16 +16,16 @@
         <a href="#home">Your Name</a>
       </div>
       <nav class="main-nav">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#media">Media</a>
-        <a href="#contact">Contact</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#media" class="nav-link">Media</a>
+        <a href="#contact" class="nav-link">Contact</a>
       </nav>
     </div>
   </header>
 
   <!-- Hero / Intro -->
-  <section id="home" class="hero">
+  <section id="home" class="hero fade-section">
     <div class="hero-content">
       <div class="hero-text">
         <h1 class="headline">
@@ -50,24 +50,38 @@
     </div>
   </section>
 
-  <!-- Quote Strip -->
-  <section class="quote-strip">
-    <div class="quote-card">
-      <p class="quote-text">"Sometimes life is going to hit you in the head with a brick. Don't lose faith."</p>
-      <p class="quote-author">— Steve Jobs</p>
-    </div>
-    <div class="quote-card">
-      <p class="quote-text">"Success is a lousy teacher. It seduces smart people into thinking they can't lose."</p>
-      <p class="quote-author">— Bill Gates</p>
-    </div>
-    <div class="quote-card">
-      <p class="quote-text">"Opportunity is missed by most people because it is dressed in overalls and looks like work."</p>
-      <p class="quote-author">— Thomas Edison</p>
+  <!-- Quote Strip / Carousel -->
+  <section class="quote-strip fade-section">
+    <div class="quote-carousel-wrapper">
+      <button class="quote-nav-btn" id="quote-prev" aria-label="Previous quote">‹</button>
+
+      <div class="quote-track-viewport">
+        <!-- these overlays create the "fade to transparent at edges" effect -->
+        <div class="quote-fade quote-fade-left"></div>
+        <div class="quote-fade quote-fade-right"></div>
+
+        <div class="quote-track" id="quote-track">
+          <div class="quote-card">
+            <p class="quote-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</p>
+            <p class="quote-author">— Person Name</p>
+          </div>
+          <div class="quote-card">
+            <p class="quote-text">"Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
+            <p class="quote-author">— Another Person</p>
+          </div>
+          <div class="quote-card">
+            <p class="quote-text">"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris."</p>
+            <p class="quote-author">— Someone Else</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="quote-nav-btn" id="quote-next" aria-label="Next quote">›</button>
     </div>
   </section>
 
   <!-- About Section -->
-  <section id="about" class="section section-narrow">
+  <section id="about" class="section section-narrow fade-section">
     <h2 class="section-title">About</h2>
     <div class="text-block">
       <p>
@@ -86,11 +100,11 @@
   </section>
 
   <!-- Projects Section -->
-  <section id="projects" class="section">
+  <section id="projects" class="section fade-section">
     <h2 class="section-title">Projects</h2>
 
     <div class="projects-grid">
-      <article class="project-card">
+      <article class="project-card fade-section">
         <div class="project-body">
           <h3 class="project-title">Project Title One</h3>
           <p class="project-desc">
@@ -101,7 +115,7 @@
         </div>
       </article>
 
-      <article class="project-card">
+      <article class="project-card fade-section">
         <div class="project-body">
           <h3 class="project-title">Project Title Two</h3>
           <p class="project-desc">
@@ -112,7 +126,7 @@
         </div>
       </article>
 
-      <article class="project-card">
+      <article class="project-card fade-section">
         <div class="project-body">
           <h3 class="project-title">Project Title Three</h3>
           <p class="project-desc">
@@ -126,11 +140,11 @@
   </section>
 
   <!-- Media / Press / Highlights -->
-  <section id="media" class="section section-narrow">
+  <section id="media" class="section section-narrow fade-section">
     <h2 class="section-title">Media / Highlights</h2>
 
     <div class="media-list">
-      <div class="media-item">
+      <div class="media-item fade-section">
         <h3 class="media-headline">
           Lorem ipsum media headline, interview, podcast, or article title
         </h3>
@@ -140,7 +154,7 @@
         <a class="media-link" href="#">Link to article →</a>
       </div>
 
-      <div class="media-item">
+      <div class="media-item fade-section">
         <h3 class="media-headline">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit
         </h3>
@@ -150,7 +164,7 @@
         <a class="media-link" href="#">Link to video →</a>
       </div>
 
-      <div class="media-item">
+      <div class="media-item fade-section">
         <h3 class="media-headline">
           Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
         </h3>
@@ -163,12 +177,13 @@
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="section">
+  <section id="contact" class="section fade-section">
     <h2 class="section-title">Contact</h2>
 
-    <div class="contact-card">
+    <div class="contact-card fade-section">
       <p>
-        Contact me here!
+        Want to connect, collaborate, or ask questions? Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Aliquam erat volutpat.
       </p>
       <ul class="contact-list">
         <li>Email: <a href="mailto:example@email.com">example@email.com</a></li>
@@ -183,7 +198,7 @@
     <div class="footer-inner">
       <p class="footer-name">Your Name</p>
       <p class="footer-copy">
-        © <span id="year"></span> | Lorem ipsum dolor sit amet. Hosted by Github Pages.
+        © <span id="year"></span> | Lorem ipsum dolor sit amet. Built for the web.
       </p>
     </div>
   </footer>

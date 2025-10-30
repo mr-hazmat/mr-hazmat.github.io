@@ -26,25 +26,59 @@ window.addEventListener("scroll", () => {
 
 
 // ------------------------------
-// Smooth scrolling for anchor links
+// Custom smooth scroll for in-page links
 // ------------------------------
+
+// Ease function (easeInOutQuad)
+function easeInOutQuad(t) {
+  return t < 0.5
+    ? 2 * t * t
+    : -1 + (4 - 2 * t) * t;
+}
+
+// Smooth scroll animation
+function smoothScrollTo(targetY, duration) {
+  const startY = window.scrollY;
+  const distanceY = targetY - startY;
+  const startTime = performance.now();
+
+  function step(currentTime) {
+    const elapsed = currentTime - startTime;
+    const t = Math.min(elapsed / duration, 1); // clamp [0,1]
+    const eased = easeInOutQuad(t);
+    window.scrollTo(0, startY + distanceY * eased);
+
+    if (elapsed < duration) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
+// Attach to all internal hash links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", function (e) {
     const targetID = this.getAttribute("href");
+
+    // ignore empty "#" links (like href="#")
+    if (!targetID || targetID === "#") return;
+
     const targetEl = document.querySelector(targetID);
+    if (!targetEl) return;
 
-    // Only apply if target element exists on the page
-    if (targetEl) {
-      e.preventDefault();
+    // stop the default instant jump
+    e.preventDefault();
 
-      // Smooth scroll to target
-      targetEl.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+    // how far from the top the element is
+    const rect = targetEl.getBoundingClientRect();
+    const absoluteY = rect.top + window.scrollY;
 
-      // Optionally close any mobile nav menus (if you add one later)
-      // Example: document.querySelector(".mobile-nav").classList.remove("open");
-    }
+    // adjust for sticky header height so the section title isn't hidden
+    const headerHeight = header.offsetHeight || 0;
+    const finalY = absoluteY - headerHeight - 8; // small padding
+
+    // do the smooth scroll (400ms feels snappy but smooth)
+    smoothScrollTo(finalY, 400);
   });
 });

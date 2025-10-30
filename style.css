@@ -1,7 +1,4 @@
-html {
-  scroll-behavior: smooth;
-}
-/* Reset-ish */
+
 * {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;

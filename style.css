@@ -1,4 +1,4 @@
-/* Reset + Base */
+/* Base */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: system-ui, -apple-system, "Inter", sans-serif;
@@ -14,11 +14,9 @@ body {
 
 /* Header */
 .site-header {
-  position: sticky; top: 0;
-  background: var(--bg-card);
+  position: sticky; top: 0; background: var(--bg-card);
   border-bottom: 1px solid var(--border-soft);
-  transition: transform 0.25s ease;
-  z-index: 1000;
+  transition: transform 0.25s ease; z-index: 1000;
 }
 .site-header.hidden { transform: translateY(-100%); }
 .nav-inner {
@@ -41,17 +39,21 @@ body {
 .main-nav a:hover::after { width: 100%; left: 0; }
 
 /* Hero */
-.hero { background: #f9f9ff; border-bottom: 1px solid var(--border-soft); padding: 3rem 1rem; }
+.hero {
+  background: #f9f9ff; border-bottom: 1px solid var(--border-soft);
+  padding: 3rem 1rem;
+}
 .hero-content {
-  display: grid; grid-template-columns: 1fr 300px; gap: 2rem; max-width: 1100px; margin: auto;
+  display: grid; grid-template-columns: 1fr 300px; gap: 2rem;
+  max-width: 1100px; margin: auto;
 }
 .hero-photo img { width: 100%; border-radius: 10px; }
 .headline { font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem; }
-.tagline { color: var(--text-dim); margin-bottom: 1.5rem; }
+.tagline { color: var(--text-dim); margin-bottom: 1.5rem; max-width: 50ch; }
 .pill-link {
   text-decoration: none; border-radius: 999px; padding: 0.6rem 1.2rem;
-  background: var(--brand); color: #fff; font-weight: 500;
-  transition: opacity 0.3s ease;
+  font-weight: 500; font-size: 0.9rem;
+  background: var(--brand); color: #fff; transition: opacity 0.3s ease;
 }
 .pill-link:hover { opacity: 0.85; }
 .pill-outline { background: none; border: 1px solid var(--brand); color: var(--brand); }
@@ -60,6 +62,7 @@ body {
 .section { max-width: 1100px; margin: auto; padding: 3rem 1rem; }
 .section-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; text-transform: uppercase; color: var(--text-main); letter-spacing: 0.05em; }
 .text-block p { color: var(--text-dim); margin-bottom: 1rem; }
+
 .projects-grid {
   display: grid; gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -73,38 +76,14 @@ body {
 .project-desc { color: var(--text-dim); margin-bottom: 0.5rem; }
 .project-link { color: var(--brand); text-decoration: none; }
 
-/* Quote Carousel */
-.quote-carousel {
-  position: relative; overflow: hidden;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border-soft);
-  border-bottom: 1px solid var(--border-soft);
-  padding: 3rem 1rem; text-align: center;
+/* Quotes (static) */
+.quotes-section { text-align: center; background: var(--bg-card); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); }
+.quotes-wrapper { max-width: 700px; margin: auto; }
+.quotes-wrapper blockquote {
+  font-style: italic; color: var(--text-main); margin: 1.5rem 0;
 }
-.carousel {
-  display: flex; align-items: center; justify-content: center;
-  max-width: 800px; margin: auto; position: relative;
-}
-.carousel-track { display: flex; transition: transform 1.4s cubic-bezier(0.4,0,0.2,1); }
-.carousel-slide {
-  flex: 0 0 100%;
-  opacity: 0; transform: scale(0.95);
-  transition: opacity 1.4s ease, transform 1.4s ease;
-}
-.carousel-slide.active { opacity: 1; transform: scale(1); }
-.carousel-slide blockquote {
-  font-style: italic; font-size: 1.1rem; color: var(--text-main);
-  max-width: 600px; margin: auto;
-}
-.carousel-slide cite { display: block; margin-top: 1rem; color: var(--text-dim); }
-.carousel-btn {
-  background: none; border: none; font-size: 2rem;
-  color: var(--text-main); padding: 0.25rem 0.75rem;
-  cursor: pointer; transition: opacity 0.3s ease;
-}
-.carousel-btn:hover { opacity: 0.6; }
 
-/* Contact & Footer */
+/* Contact + Footer */
 .contact-card {
   background: var(--bg-card); border: 1px solid var(--border-soft);
   border-radius: 8px; padding: 1.5rem; max-width: 700px;
@@ -116,8 +95,7 @@ body {
   background: var(--bg-card);
   border-top: 1px solid var(--border-soft);
   padding: 2rem 1rem;
-  text-align: center;
-  color: var(--text-dim);
+  text-align: center; color: var(--text-dim);
 }
 .footer-name { font-weight: 600; margin-bottom: 0.25rem; }
 

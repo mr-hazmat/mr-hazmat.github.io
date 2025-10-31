@@ -2,106 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Name | STEM Projects</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Your Name | Portfolio</title>
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
 
 <body>
-  <!-- Header -->
+  <!-- Navbar (hides on scroll down, shows on scroll up) -->
   <header id="site-header" class="site-header">
     <div class="nav-inner">
-      <div class="brand"><a href="#home">Your Name</a></div>
+      <div class="brand">
+        <a href="#home">Your Name</a>
+      </div>
       <nav class="main-nav">
-        <a href="#about" class="nav-link">About</a>
-        <a href="#projects" class="nav-link">Projects</a>
-        <a href="#quotes" class="nav-link">Quotes</a>
-        <a href="#contact" class="nav-link">Contact</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#media">Media</a>
+        <a href="#contact">Contact</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section id="home" class="hero fade-section">
+  <!-- Hero / Intro -->
+  <section id="home" class="hero">
     <div class="hero-content">
       <div class="hero-text">
-        <h1 class="headline">Welcome to My STEM Project Portfolio</h1>
+        <h1 class="headline">
+          Lorem ipsum headline here that describes who you are in one sentence.
+        </h1>
         <p class="tagline">
-          Explore hands-on science, technology, engineering, and math projects
-          — documented so others can learn and build too.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+          Praesent porta efficitur magna, a viverra magna sagittis et. 
+          Curabitur sit amet eros sed leo consequat tincidunt.
         </p>
+
         <div class="hero-links">
-          <a href="#projects" class="pill-link">See My Projects</a>
-          <a href="#contact" class="pill-link pill-outline">Get in Touch</a>
+          <a class="pill-link" href="#projects">View My Work</a>
+          <a class="pill-link pill-outline" href="#contact">Get In Touch</a>
         </div>
       </div>
+
       <div class="hero-photo">
-        <img src="https://via.placeholder.com/400x400" alt="STEM projects" />
+        <img src="https://via.placeholder.com/500x500"
+             alt="Your portrait or relevant image" />
       </div>
     </div>
   </section>
 
-  <!-- About -->
-  <section id="about" class="section fade-section">
+  <!-- Quote Strip -->
+  <section class="quote-strip">
+    <div class="quote-card">
+      <p class="quote-text">"Sometimes life is going to hit you in the head with a brick. Don't lose faith."</p>
+      <p class="quote-author">— Steve Jobs</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"Success is a lousy teacher. It seduces smart people into thinking they can't lose."</p>
+      <p class="quote-author">— Bill Gates</p>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text">"Opportunity is missed by most people because it is dressed in overalls and looks like work."</p>
+      <p class="quote-author">— Thomas Edison</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section section-narrow">
     <h2 class="section-title">About</h2>
     <div class="text-block">
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in
-        neque et nisl facilisis pretium. Sed a mauris nec nulla feugiat
-        ullamcorper.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
+        elementum, lorem ac porta porttitor, ipsum lorem euismod dui, vitae
+        pellentesque arcu ipsum non nisl. Integer vel ultrices justo.
+        Suspendisse potenti. Integer nec lorem sit amet mi posuere porta.
+      </p>
+      <p>
+        Fusce ac lorem nec tortor porttitor volutpat. Pellentesque ut
+        fermentum lorem. Phasellus dictum, lorem a convallis faucibus, ipsum
+        magna convallis lorem, dictum tincidunt eros justo a mi. Curabitur
+        varius tristique lorem, in elementum eros volutpat non.
       </p>
     </div>
   </section>
 
-  <!-- Projects -->
-  <section id="projects" class="section fade-section">
+  <!-- Projects Section -->
+  <section id="projects" class="section">
     <h2 class="section-title">Projects</h2>
+
     <div class="projects-grid">
-      <article class="project-card fade-section">
-        <h3 class="project-title">Wind Tunnel Mini</h3>
-        <p class="project-desc">
-          A desktop-sized wind tunnel for testing airfoils and drag coefficients.
-        </p>
-        <a href="#" class="project-link">View Project →</a>
+      <article class="project-card">
+        <div class="project-body">
+          <h3 class="project-title">Project Title One</h3>
+          <p class="project-desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+            fringilla lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </p>
+          <a class="project-link" href="#">Read more →</a>
+        </div>
       </article>
-      <article class="project-card fade-section">
-        <h3 class="project-title">Hydro Rocket</h3>
-        <p class="project-desc">
-          Water-powered rocket optimized for stability and altitude.
-        </p>
-        <a href="#" class="project-link">View Project →</a>
+
+      <article class="project-card">
+        <div class="project-body">
+          <h3 class="project-title">Project Title Two</h3>
+          <p class="project-desc">
+            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+          </p>
+          <a class="project-link" href="#">Read more →</a>
+        </div>
       </article>
-      <article class="project-card fade-section">
-        <h3 class="project-title">Arduino Rover</h3>
-        <p class="project-desc">
-          A programmable rover with sensors and Bluetooth control.
-        </p>
-        <a href="#" class="project-link">View Project →</a>
+
+      <article class="project-card">
+        <div class="project-body">
+          <h3 class="project-title">Project Title Three</h3>
+          <p class="project-desc">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur.
+          </p>
+          <a class="project-link" href="#">Read more →</a>
+        </div>
       </article>
     </div>
   </section>
 
-  <!-- Quotes (static version) -->
-  <section id="quotes" class="section fade-section quotes-section">
-    <h2 class="section-title">Quotes</h2>
-    <div class="quotes-wrapper">
-      <blockquote>“The best way to predict the future is to invent it.” — Alan Kay</blockquote>
-      <blockquote>“Science is organized knowledge. Wisdom is organized life.” — Immanuel Kant</blockquote>
-      <blockquote>“What we know is a drop; what we don’t know is an ocean.” — Isaac Newton</blockquote>
+  <!-- Media / Press / Highlights -->
+  <section id="media" class="section section-narrow">
+    <h2 class="section-title">Media / Highlights</h2>
+
+    <div class="media-list">
+      <div class="media-item">
+        <h3 class="media-headline">
+          Lorem ipsum media headline, interview, podcast, or article title
+        </h3>
+        <p class="media-meta">
+          Publication / Platform · 2025
+        </p>
+        <a class="media-link" href="#">Link to article →</a>
+      </div>
+
+      <div class="media-item">
+        <h3 class="media-headline">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        </h3>
+        <p class="media-meta">
+          Example Outlet · 2025
+        </p>
+        <a class="media-link" href="#">Link to video →</a>
+      </div>
+
+      <div class="media-item">
+        <h3 class="media-headline">
+          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        </h3>
+        <p class="media-meta">
+          Another Source · 2024
+        </p>
+        <a class="media-link" href="#">Link to post →</a>
+      </div>
     </div>
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="section fade-section">
+  <section id="contact" class="section">
     <h2 class="section-title">Contact</h2>
-    <div class="contact-card fade-section">
+
+    <div class="contact-card">
       <p>
-        Interested in collaborating or learning more? Reach out anytime.
+        Contact me here!
       </p>
       <ul class="contact-list">
         <li>Email: <a href="mailto:example@email.com">example@email.com</a></li>
         <li>GitHub: <a href="#">github.com/yourusername</a></li>
+        <li>LinkedIn: <a href="#">linkedin.com/in/yourusername</a></li>
       </ul>
     </div>
   </section>
@@ -110,7 +182,9 @@
   <footer class="footer">
     <div class="footer-inner">
       <p class="footer-name">Your Name</p>
-      <p class="footer-copy">© <span id="year"></span> | STEM Projects Portfolio</p>
+      <p class="footer-copy">
+        © <span id="year"></span> | Lorem ipsum dolor sit amet. Hosted by Github Pages.
+      </p>
     </div>
   </footer>
 </body>

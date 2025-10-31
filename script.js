@@ -103,7 +103,7 @@ faders.forEach(el => fadeObserver.observe(el));
 
 
 // ------------------------------
-// Quote carousel with seamless looping
+// Quote carousel (final flicker-free loop)
 // ------------------------------
 const track = document.getElementById("quote-track");
 const prevBtn = document.getElementById("quote-prev");
@@ -121,70 +121,84 @@ function setupCarousel() {
   const originals = Array.from(track.querySelectorAll(".quote-card"));
   if (originals.length === 0) return;
 
-  // prevent duplicate setup
-  if (track.dataset.loopReady === "true") return;
+  // clear any previous clones
+  track.querySelectorAll("[data-clone]").forEach(c => c.remove());
 
+  // clone first and last for seamless loop
   const firstClone = originals[0].cloneNode(true);
   const lastClone = originals[originals.length - 1].cloneNode(true);
-  firstClone.setAttribute("data-clone", "first");
-  lastClone.setAttribute("data-clone", "last");
-
+  firstClone.dataset.clone = "first";
+  lastClone.dataset.clone = "last";
   track.insertBefore(lastClone, originals[0]);
   track.appendChild(firstClone);
-  track.dataset.loopReady = "true";
 
-  cards = track.querySelectorAll(".quote-card");
-
+  cards = Array.from(track.querySelectorAll(".quote-card"));
   measure();
+
+  // jump instantly to first real card
   jumpToIndex(currentIndex, false);
 
-  // listen once for transitionend
   track.addEventListener("transitionend", handleTransitionEnd);
 }
 
 function measure() {
-  if (!track) return;
   const firstCard = track.querySelector(".quote-card");
   const styles = window.getComputedStyle(track);
   gapSize = parseFloat(styles.columnGap || styles.gap || "16");
   cardWidth = firstCard.getBoundingClientRect().width;
 }
 
-function jumpToIndex(index, animate = true) {
+// Calculate transform so that card[index] is centered
+function calcTranslateX(index) {
   const viewport = track.parentElement;
   const viewportWidth = viewport.getBoundingClientRect().width;
-
-  let offsetLeft = 0;
-  for (let i = 0; i < index; i++) offsetLeft += cardWidth + gapSize;
-
-  const cardCenter = offsetLeft + cardWidth / 2;
+  const offset = index * (cardWidth + gapSize) + cardWidth / 2;
   const viewportCenter = viewportWidth / 2;
-  const translateX = viewportCenter - cardCenter;
+  return viewportCenter - offset;
+}
 
+function jumpToIndex(index, animate = true) {
+  const tx = calcTranslateX(index);
   if (!animate) {
     track.style.transition = "none";
-    track.style.transform = `translateX(${translateX}px)`;
-    // Force reflow so next transition applies cleanly
+    track.style.transform = `translate3d(${tx}px,0,0)`;
+    // force reflow
     void track.offsetHeight;
     track.style.transition = "transform 0.6s ease-in-out";
   } else {
     track.style.transition = "transform 0.6s ease-in-out";
-    track.style.transform = `translateX(${translateX}px)`;
+    track.style.transform = `translate3d(${tx}px,0,0)`;
   }
 }
 
+// Snap without visible gap
 function handleTransitionEnd() {
-  // hide flicker by snapping instantly while transitions are off
-  if (currentIndex === 0) {
-    currentIndex = cards.length - 2;
+  if (!cards || cards.length < 3) return;
+
+  const total = cards.length;
+  const isAtFirstClone = currentIndex === 0;
+  const isAtLastClone = currentIndex === total - 1;
+
+  if (isAtFirstClone || isAtLastClone) {
+    // temporarily disable transition BEFORE the next frame
     track.style.transition = "none";
-    jumpToIndex(currentIndex, false);
-  } else if (currentIndex === cards.length - 1) {
-    currentIndex = 1;
-    track.style.transition = "none";
-    jumpToIndex(currentIndex, false);
+
+    if (isAtFirstClone) currentIndex = total - 2;
+    if (isAtLastClone) currentIndex = 1;
+
+    const tx = calcTranslateX(currentIndex);
+    // apply transform instantly, but keep the last frame visible
+    requestAnimationFrame(() => {
+      track.style.transform = `translate3d(${tx}px,0,0)`;
+      // re-enable transition AFTER this paint, not before
+      requestAnimationFrame(() => {
+        track.style.transition = "transform 0.6s ease-in-out";
+        isTransitioning = false;
+      });
+    });
+  } else {
+    isTransitioning = false;
   }
-  isTransitioning = false;
 }
 
 function goNext() {
@@ -201,7 +215,7 @@ function goPrev() {
   jumpToIndex(currentIndex, true);
 }
 
-// Init
+// init
 if (track && prevBtn && nextBtn) {
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);
@@ -211,3 +225,4 @@ if (track && prevBtn && nextBtn) {
   });
   setupCarousel();
 }
+

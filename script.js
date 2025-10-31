@@ -100,8 +100,6 @@ const fadeObserver = new IntersectionObserver(
 );
 
 faders.forEach(el => fadeObserver.observe(el));
-
-
 // ------------------------------
 // Quote carousel (true seamless loop — no empty gap)
 // ------------------------------
@@ -233,4 +231,3 @@ if (track && prevBtn && nextBtn) {
   });
   setupCarousel();
 }
-

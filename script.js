@@ -101,43 +101,15 @@ const fadeObserver = new IntersectionObserver(
 
 faders.forEach(el => fadeObserver.observe(el));
 // ------------------------------
-// Quote carousel (final smooth loop, no blank, no jump)
+// True circular quote carousel (no snap, no cut)
 // ------------------------------
 const track = document.getElementById("quote-track");
 const prevBtn = document.getElementById("quote-prev");
 const nextBtn = document.getElementById("quote-next");
 
-let cards;
 let cardWidth = 0;
 let gapSize = 0;
-let currentIndex = 1;
 let isTransitioning = false;
-
-function setupCarousel() {
-  if (!track) return;
-
-  const originals = Array.from(track.querySelectorAll(".quote-card"));
-  if (!originals.length) return;
-
-  // Remove any existing clones
-  track.querySelectorAll("[data-clone]").forEach(c => c.remove());
-
-  // Clone first and last slides
-  const firstClone = originals[0].cloneNode(true);
-  const lastClone = originals[originals.length - 1].cloneNode(true);
-  firstClone.dataset.clone = "first";
-  lastClone.dataset.clone = "last";
-  track.insertBefore(lastClone, originals[0]);
-  track.appendChild(firstClone);
-
-  cards = Array.from(track.querySelectorAll(".quote-card"));
-  measure();
-
-  // Jump directly to first real slide
-  jumpToIndex(currentIndex, false);
-
-  track.addEventListener("transitionend", handleTransitionEnd);
-}
 
 function measure() {
   const firstCard = track.querySelector(".quote-card");
@@ -146,65 +118,53 @@ function measure() {
   cardWidth = firstCard.getBoundingClientRect().width;
 }
 
-function calcTranslate(index) {
-  const viewport = track.parentElement;
-  const viewportWidth = viewport.getBoundingClientRect().width;
-  const offset = index * (cardWidth + gapSize) + cardWidth / 2;
-  const viewportCenter = viewportWidth / 2;
-  return viewportCenter - offset;
-}
-
-function jumpToIndex(index, animate = true) {
-  const tx = calcTranslate(index);
-  if (!animate) {
-    track.style.transition = "none";
-    track.style.transform = `translate3d(${tx}px, 0, 0)`;
-    void track.offsetHeight;
-    track.style.transition = "transform 0.6s ease-in-out";
-  } else {
-    track.style.transition = "transform 0.6s ease-in-out";
-    track.style.transform = `translate3d(${tx}px, 0, 0)`;
-  }
-}
-
-function handleTransitionEnd() {
-  if (!cards || cards.length < 3) return;
-
-  if (currentIndex === 0) {
-    // Jump from first clone → real last
-    track.style.transition = "none";
-    currentIndex = cards.length - 2;
-    jumpToIndex(currentIndex, false);
-  } else if (currentIndex === cards.length - 1) {
-    // Jump from last clone → real first
-    track.style.transition = "none";
-    currentIndex = 1;
-    jumpToIndex(currentIndex, false);
-  }
-  isTransitioning = false;
-}
-
-function goNext() {
+function moveToNext() {
   if (isTransitioning) return;
   isTransitioning = true;
-  currentIndex++;
-  jumpToIndex(currentIndex, true);
+
+  const moveAmount = cardWidth + gapSize;
+  track.style.transition = "transform 0.6s ease-in-out";
+  track.style.transform = `translateX(${-moveAmount}px)`;
+
+  track.addEventListener(
+    "transitionend",
+    () => {
+      track.style.transition = "none";
+      // move first card to end
+      track.appendChild(track.firstElementChild);
+      track.style.transform = "translateX(0)";
+      isTransitioning = false;
+    },
+    { once: true }
+  );
 }
 
-function goPrev() {
+function moveToPrev() {
   if (isTransitioning) return;
   isTransitioning = true;
-  currentIndex--;
-  jumpToIndex(currentIndex, true);
+
+  const moveAmount = cardWidth + gapSize;
+  track.style.transition = "none";
+  // move last card to front before transition
+  track.insertBefore(track.lastElementChild, track.firstElementChild);
+  track.style.transform = `translateX(${-moveAmount}px)`;
+  void track.offsetHeight; // force reflow
+  track.style.transition = "transform 0.6s ease-in-out";
+  track.style.transform = "translateX(0)";
+
+  track.addEventListener(
+    "transitionend",
+    () => {
+      track.style.transition = "none";
+      isTransitioning = false;
+    },
+    { once: true }
+  );
 }
 
-// Initialize
 if (track && prevBtn && nextBtn) {
-  prevBtn.addEventListener("click", goPrev);
-  nextBtn.addEventListener("click", goNext);
-  window.addEventListener("resize", () => {
-    measure();
-    jumpToIndex(currentIndex, false);
-  });
-  setupCarousel();
+  measure();
+  window.addEventListener("resize", measure);
+  nextBtn.addEventListener("click", moveToNext);
+  prevBtn.addEventListener("click", moveToPrev);
 }

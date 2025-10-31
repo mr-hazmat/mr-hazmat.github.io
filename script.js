@@ -103,7 +103,7 @@ faders.forEach(el => fadeObserver.observe(el));
 
 
 // ------------------------------
-// Quote carousel (final flicker-free loop)
+// Quote carousel (seamless looping, no blank delay)
 // ------------------------------
 const track = document.getElementById("quote-track");
 const prevBtn = document.getElementById("quote-prev");
@@ -121,21 +121,22 @@ function setupCarousel() {
   const originals = Array.from(track.querySelectorAll(".quote-card"));
   if (originals.length === 0) return;
 
-  // clear any previous clones
+  // Remove previous clones (if any)
   track.querySelectorAll("[data-clone]").forEach(c => c.remove());
 
-  // clone first and last for seamless loop
+  // Clone first & last
   const firstClone = originals[0].cloneNode(true);
   const lastClone = originals[originals.length - 1].cloneNode(true);
   firstClone.dataset.clone = "first";
   lastClone.dataset.clone = "last";
+
+  // Insert them (lastClone at front, firstClone at end)
   track.insertBefore(lastClone, originals[0]);
   track.appendChild(firstClone);
 
   cards = Array.from(track.querySelectorAll(".quote-card"));
-  measure();
 
-  // jump instantly to first real card
+  measure();
   jumpToIndex(currentIndex, false);
 
   track.addEventListener("transitionend", handleTransitionEnd);
@@ -148,8 +149,7 @@ function measure() {
   cardWidth = firstCard.getBoundingClientRect().width;
 }
 
-// Calculate transform so that card[index] is centered
-function calcTranslateX(index) {
+function calcTranslate(index) {
   const viewport = track.parentElement;
   const viewportWidth = viewport.getBoundingClientRect().width;
   const offset = index * (cardWidth + gapSize) + cardWidth / 2;
@@ -158,52 +158,43 @@ function calcTranslateX(index) {
 }
 
 function jumpToIndex(index, animate = true) {
-  const tx = calcTranslateX(index);
+  const tx = calcTranslate(index);
   if (!animate) {
     track.style.transition = "none";
-    track.style.transform = `translate3d(${tx}px,0,0)`;
-    // force reflow
+    track.style.transform = `translate3d(${tx}px, 0, 0)`;
     void track.offsetHeight;
     track.style.transition = "transform 0.6s ease-in-out";
   } else {
     track.style.transition = "transform 0.6s ease-in-out";
-    track.style.transform = `translate3d(${tx}px,0,0)`;
+    track.style.transform = `translate3d(${tx}px, 0, 0)`;
   }
 }
 
-// Snap without visible gap
 function handleTransitionEnd() {
-  if (!cards || cards.length < 3) return;
-
-  const total = cards.length;
-  const isAtFirstClone = currentIndex === 0;
-  const isAtLastClone = currentIndex === total - 1;
-
-  if (isAtFirstClone || isAtLastClone) {
-    // temporarily disable transition BEFORE the next frame
-    track.style.transition = "none";
-
-    if (isAtFirstClone) currentIndex = total - 2;
-    if (isAtLastClone) currentIndex = 1;
-
-    const tx = calcTranslateX(currentIndex);
-    // apply transform instantly, but keep the last frame visible
-    requestAnimationFrame(() => {
-      track.style.transform = `translate3d(${tx}px,0,0)`;
-      // re-enable transition AFTER this paint, not before
-      requestAnimationFrame(() => {
-        track.style.transition = "transform 0.6s ease-in-out";
-        isTransitioning = false;
-      });
-    });
-  } else {
-    isTransitioning = false;
+  // If we just moved into a clone, instantly jump to the real card
+  if (currentIndex === 0) {
+    currentIndex = cards.length - 2;
+    jumpToIndex(currentIndex, false);
+  } else if (currentIndex === cards.length - 1) {
+    currentIndex = 1;
+    jumpToIndex(currentIndex, false);
   }
+  isTransitioning = false;
 }
 
 function goNext() {
   if (isTransitioning) return;
   isTransitioning = true;
+
+  // If we’re on the second to last real card, pre-jump so there’s no gap
+  if (currentIndex === cards.length - 2) {
+    // Jump instantly to start clone position, then slide
+    jumpToIndex(0, false);
+    currentIndex = 1;
+    requestAnimationFrame(() => jumpToIndex(currentIndex, true));
+    return;
+  }
+
   currentIndex++;
   jumpToIndex(currentIndex, true);
 }
@@ -211,11 +202,20 @@ function goNext() {
 function goPrev() {
   if (isTransitioning) return;
   isTransitioning = true;
+
+  // If we’re on the second card, pre-jump to end clone before sliding
+  if (currentIndex === 1) {
+    jumpToIndex(cards.length - 1, false);
+    currentIndex = cards.length - 2;
+    requestAnimationFrame(() => jumpToIndex(currentIndex, true));
+    return;
+  }
+
   currentIndex--;
   jumpToIndex(currentIndex, true);
 }
 
-// init
+// Init
 if (track && prevBtn && nextBtn) {
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);

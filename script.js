@@ -1,94 +1,31 @@
-// ------------------------------
-// Dynamic footer year
-// ------------------------------
-const yearEl = document.getElementById("year");
-if (yearEl) {
-  yearEl.textContent = new Date().getFullYear();
-}
+// Footer Year
+document.getElementById("year").textContent = new Date().getFullYear();
 
-// ------------------------------
-// Hide / show header on scroll
-// ------------------------------
+// Hide Header on Scroll
 let lastScrollY = window.scrollY;
 const header = document.getElementById("site-header");
-
 window.addEventListener("scroll", () => {
   const currentY = window.scrollY;
-
-  if (currentY > lastScrollY && currentY > 80) {
-    // Scrolling down → hide header
-    header.classList.add("hidden");
-  } else {
-    // Scrolling up → show header
-    header.classList.remove("hidden");
-  }
-
+  if (currentY > lastScrollY && currentY > 80) header.classList.add("hidden");
+  else header.classList.remove("hidden");
   lastScrollY = currentY;
 });
 
-
-// ------------------------------
-// Smooth scrolling with easing + header offset
-// ------------------------------
-function easeInOutQuad(t) {
-  return t < 0.5
-    ? 2 * t * t
-    : -1 + (4 - 2 * t) * t;
-}
-
-function smoothScrollTo(targetY, duration) {
-  const startY = window.scrollY;
-  const distanceY = targetY - startY;
-  const startTime = performance.now();
-
-  function step(now) {
-    const elapsed = now - startTime;
-    const t = Math.min(elapsed / duration, 1);
-    const eased = easeInOutQuad(t);
-
-    window.scrollTo(0, startY + distanceY * eased);
-
-    if (elapsed < duration) {
-      requestAnimationFrame(step);
-    }
-  }
-
-  requestAnimationFrame(step);
-}
-
-// capture clicks on in-page links for smooth scroll
-document.addEventListener("click", function (e) {
-  const t = e.target;
-  if (
-    t.tagName.toLowerCase() === "a" &&
-    t.getAttribute("href") &&
-    t.getAttribute("href").startsWith("#") &&
-    t.getAttribute("href") !== "#"
-  ) {
-    const href = t.getAttribute("href");
-    const targetEl = document.querySelector(href);
-    if (!targetEl) return;
-
+// Smooth Scrolling
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", e => {
+    const t = document.querySelector(a.getAttribute("href"));
+    if (!t) return;
     e.preventDefault();
-
-    const rect = targetEl.getBoundingClientRect();
-    const absoluteY = rect.top + window.scrollY;
-
-    const headerHeight = header ? header.offsetHeight : 0;
-    const finalY = absoluteY - headerHeight - 8;
-
-    smoothScrollTo(finalY, 450);
-  }
+    const y = t.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  });
 });
 
-
-// ------------------------------
-// Fade-in on scroll
-// ------------------------------
+// Fade-in on Scroll
 const faders = document.querySelectorAll(".fade-section");
-
-const fadeObserver = new IntersectionObserver(
-  (entries, obs) => {
+const obs = new IntersectionObserver(
+  entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add("is-visible");
@@ -96,76 +33,71 @@ const fadeObserver = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.15 }
+  { threshold: 0.1 }
 );
+faders.forEach(el => obs.observe(el));
 
-faders.forEach(el => fadeObserver.observe(el));
-/// ------------------------------
-// Perfect seamless quote carousel (no snap, no jump, no flicker)
-// ------------------------------
-const track = document.getElementById("quote-track");
-const prevBtn = document.getElementById("quote-prev");
-const nextBtn = document.getElementById("quote-next");
+// Smooth Infinite Carousel
+const track = document.querySelector(".carousel-track");
+if (track) {
+  const slides = Array.from(track.children);
+  const nextBtn = document.querySelector(".carousel-btn.next");
+  const prevBtn = document.querySelector(".carousel-btn.prev");
 
-let cardWidth = 0;
-let gapSize = 0;
-let isTransitioning = false;
+  const firstClone = slides[0].cloneNode(true);
+  const lastClone = slides[slides.length - 1].cloneNode(true);
+  firstClone.dataset.clone = "first";
+  lastClone.dataset.clone = "last";
+  track.appendChild(firstClone);
+  track.insertBefore(lastClone, slides[0]);
 
-function measure() {
-  const firstCard = track.querySelector(".quote-card");
-  const styles = window.getComputedStyle(track);
-  gapSize = parseFloat(styles.columnGap || styles.gap || "16");
-  cardWidth = firstCard.getBoundingClientRect().width;
-}
+  const allSlides = Array.from(track.children);
+  let currentIndex = 1;
+  let isAnimating = false;
+  let slideWidth = allSlides[0].getBoundingClientRect().width;
 
-function moveNext() {
-  if (isTransitioning) return;
-  isTransitioning = true;
+  track.style.transform = `translateX(-${slideWidth}px)`;
+  allSlides[1].classList.add("active");
 
-  const moveAmount = cardWidth + gapSize;
-  track.style.transition = "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)";
-  track.style.transform = `translateX(${-moveAmount}px)`;
+  function moveTo(index) {
+    if (isAnimating) return;
+    isAnimating = true;
+    allSlides.forEach(s => s.classList.remove("active"));
+    allSlides[index].classList.add("active");
+    track.style.transition = "transform 1.4s cubic-bezier(0.4, 0, 0.2, 1)";
+    track.style.transform = `translateX(-${slideWidth * index}px)`;
+  }
 
-  track.addEventListener(
-    "transitionend",
-    () => {
+  track.addEventListener("transitionend", () => {
+    const currentSlide = allSlides[currentIndex];
+    if (currentSlide.dataset.clone === "last") {
       track.style.transition = "none";
-      // Move first slide to end (so visually nothing changes)
-      track.appendChild(track.firstElementChild);
-      track.style.transform = "translateX(0)";
-      void track.offsetHeight;
-      isTransitioning = false;
-    },
-    { once: true }
-  );
-}
-
-function movePrev() {
-  if (isTransitioning) return;
-  isTransitioning = true;
-
-  const moveAmount = cardWidth + gapSize;
-  // Instantly move last slide to front before animating
-  track.style.transition = "none";
-  track.insertBefore(track.lastElementChild, track.firstElementChild);
-  track.style.transform = `translateX(${-moveAmount}px)`;
-  void track.offsetHeight; // reflow before transition starts
-  track.style.transition = "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)";
-  track.style.transform = "translateX(0)";
-
-  track.addEventListener(
-    "transitionend",
-    () => {
+      currentIndex = slides.length;
+      track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+    }
+    if (currentSlide.dataset.clone === "first") {
       track.style.transition = "none";
-      isTransitioning = false;
-    },
-    { once: true }
-  );
-}
+      currentIndex = 1;
+      track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+    }
+    isAnimating = false;
+  });
 
-if (track && prevBtn && nextBtn) {
-  measure();
-  window.addEventListener("resize", measure);
-  nextBtn.addEventListener("click", moveNext);
-  prevBtn.addEventListener("click", movePrev);
+  nextBtn.addEventListener("click", () => {
+    if (isAnimating) return;
+    currentIndex++;
+    moveTo(currentIndex);
+  });
+
+  prevBtn.addEventListener("click", () => {
+    if (isAnimating) return;
+    currentIndex--;
+    moveTo(currentIndex);
+  });
+
+  window.addEventListener("resize", () => {
+    slideWidth = allSlides[0].getBoundingClientRect().width;
+    track.style.transition = "none";
+    track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+  });
 }

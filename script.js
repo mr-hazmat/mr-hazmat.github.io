@@ -225,4 +225,3 @@ if (track && prevBtn && nextBtn) {
   });
   setupCarousel();
 }
-

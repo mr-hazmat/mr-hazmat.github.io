@@ -101,7 +101,7 @@ const fadeObserver = new IntersectionObserver(
 
 faders.forEach(el => fadeObserver.observe(el));
 // ------------------------------
-// Quote carousel (true seamless loop — no empty gap)
+// Quote carousel (final smooth loop, no blank, no jump)
 // ------------------------------
 const track = document.getElementById("quote-track");
 const prevBtn = document.getElementById("quote-prev");
@@ -119,10 +119,10 @@ function setupCarousel() {
   const originals = Array.from(track.querySelectorAll(".quote-card"));
   if (!originals.length) return;
 
-  // Clear previous clones if any
+  // Remove any existing clones
   track.querySelectorAll("[data-clone]").forEach(c => c.remove());
 
-  // Clone first and last quotes
+  // Clone first and last slides
   const firstClone = originals[0].cloneNode(true);
   const lastClone = originals[originals.length - 1].cloneNode(true);
   firstClone.dataset.clone = "first";
@@ -133,8 +133,10 @@ function setupCarousel() {
   cards = Array.from(track.querySelectorAll(".quote-card"));
   measure();
 
-  // Position the track so first real card is visible
+  // Jump directly to first real slide
   jumpToIndex(currentIndex, false);
+
+  track.addEventListener("transitionend", handleTransitionEnd);
 }
 
 function measure() {
@@ -156,69 +158,44 @@ function jumpToIndex(index, animate = true) {
   const tx = calcTranslate(index);
   if (!animate) {
     track.style.transition = "none";
-    track.style.transform = `translate3d(${tx}px,0,0)`;
+    track.style.transform = `translate3d(${tx}px, 0, 0)`;
     void track.offsetHeight;
     track.style.transition = "transform 0.6s ease-in-out";
   } else {
     track.style.transition = "transform 0.6s ease-in-out";
-    track.style.transform = `translate3d(${tx}px,0,0)`;
+    track.style.transform = `translate3d(${tx}px, 0, 0)`;
   }
+}
+
+function handleTransitionEnd() {
+  if (!cards || cards.length < 3) return;
+
+  if (currentIndex === 0) {
+    // Jump from first clone → real last
+    track.style.transition = "none";
+    currentIndex = cards.length - 2;
+    jumpToIndex(currentIndex, false);
+  } else if (currentIndex === cards.length - 1) {
+    // Jump from last clone → real first
+    track.style.transition = "none";
+    currentIndex = 1;
+    jumpToIndex(currentIndex, false);
+  }
+  isTransitioning = false;
 }
 
 function goNext() {
   if (isTransitioning) return;
   isTransitioning = true;
-
-  // If we're on the last real quote, pre-jump to clone first
-  if (currentIndex === cards.length - 2) {
-    jumpToIndex(cards.length - 2, false); // ensure correct alignment
-    requestAnimationFrame(() => {
-      currentIndex = cards.length - 1; // move into firstClone
-      jumpToIndex(currentIndex, true);
-      // When transition halfway done, jump instantly to real first
-      setTimeout(() => {
-        track.style.transition = "none";
-        currentIndex = 1;
-        jumpToIndex(currentIndex, false);
-        void track.offsetHeight;
-        track.style.transition = "transform 0.6s ease-in-out";
-        isTransitioning = false;
-      }, 300);
-    });
-    return;
-  }
-
   currentIndex++;
   jumpToIndex(currentIndex, true);
-  setTimeout(() => (isTransitioning = false), 600);
 }
 
 function goPrev() {
   if (isTransitioning) return;
   isTransitioning = true;
-
-  // If we're on the first real quote, pre-jump to clone last
-  if (currentIndex === 1) {
-    jumpToIndex(1, false); // ensure alignment
-    requestAnimationFrame(() => {
-      currentIndex = 0; // move into lastClone
-      jumpToIndex(currentIndex, true);
-      // Midway through animation, snap to real last
-      setTimeout(() => {
-        track.style.transition = "none";
-        currentIndex = cards.length - 2;
-        jumpToIndex(currentIndex, false);
-        void track.offsetHeight;
-        track.style.transition = "transform 0.6s ease-in-out";
-        isTransitioning = false;
-      }, 300);
-    });
-    return;
-  }
-
   currentIndex--;
   jumpToIndex(currentIndex, true);
-  setTimeout(() => (isTransitioning = false), 600);
 }
 
 // Initialize

@@ -100,8 +100,8 @@ const fadeObserver = new IntersectionObserver(
 );
 
 faders.forEach(el => fadeObserver.observe(el));
-// ------------------------------
-// True circular quote carousel (no snap, no cut)
+/// ------------------------------
+// Perfect seamless quote carousel (no snap, no jump, no flicker)
 // ------------------------------
 const track = document.getElementById("quote-track");
 const prevBtn = document.getElementById("quote-prev");
@@ -118,38 +118,39 @@ function measure() {
   cardWidth = firstCard.getBoundingClientRect().width;
 }
 
-function moveToNext() {
+function moveNext() {
   if (isTransitioning) return;
   isTransitioning = true;
 
   const moveAmount = cardWidth + gapSize;
-  track.style.transition = "transform 0.6s ease-in-out";
+  track.style.transition = "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)";
   track.style.transform = `translateX(${-moveAmount}px)`;
 
   track.addEventListener(
     "transitionend",
     () => {
       track.style.transition = "none";
-      // move first card to end
+      // Move first slide to end (so visually nothing changes)
       track.appendChild(track.firstElementChild);
       track.style.transform = "translateX(0)";
+      void track.offsetHeight;
       isTransitioning = false;
     },
     { once: true }
   );
 }
 
-function moveToPrev() {
+function movePrev() {
   if (isTransitioning) return;
   isTransitioning = true;
 
   const moveAmount = cardWidth + gapSize;
+  // Instantly move last slide to front before animating
   track.style.transition = "none";
-  // move last card to front before transition
   track.insertBefore(track.lastElementChild, track.firstElementChild);
   track.style.transform = `translateX(${-moveAmount}px)`;
-  void track.offsetHeight; // force reflow
-  track.style.transition = "transform 0.6s ease-in-out";
+  void track.offsetHeight; // reflow before transition starts
+  track.style.transition = "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)";
   track.style.transform = "translateX(0)";
 
   track.addEventListener(
@@ -165,6 +166,6 @@ function moveToPrev() {
 if (track && prevBtn && nextBtn) {
   measure();
   window.addEventListener("resize", measure);
-  nextBtn.addEventListener("click", moveToNext);
-  prevBtn.addEventListener("click", moveToPrev);
+  nextBtn.addEventListener("click", moveNext);
+  prevBtn.addEventListener("click", movePrev);
 }

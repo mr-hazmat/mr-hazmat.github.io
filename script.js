@@ -103,7 +103,7 @@ faders.forEach(el => fadeObserver.observe(el));
 
 
 // ------------------------------
-// Quote carousel (seamless looping, no blank delay)
+// Quote carousel (true seamless loop — no empty gap)
 // ------------------------------
 const track = document.getElementById("quote-track");
 const prevBtn = document.getElementById("quote-prev");
@@ -119,27 +119,24 @@ function setupCarousel() {
   if (!track) return;
 
   const originals = Array.from(track.querySelectorAll(".quote-card"));
-  if (originals.length === 0) return;
+  if (!originals.length) return;
 
-  // Remove previous clones (if any)
+  // Clear previous clones if any
   track.querySelectorAll("[data-clone]").forEach(c => c.remove());
 
-  // Clone first & last
+  // Clone first and last quotes
   const firstClone = originals[0].cloneNode(true);
   const lastClone = originals[originals.length - 1].cloneNode(true);
   firstClone.dataset.clone = "first";
   lastClone.dataset.clone = "last";
-
-  // Insert them (lastClone at front, firstClone at end)
   track.insertBefore(lastClone, originals[0]);
   track.appendChild(firstClone);
 
   cards = Array.from(track.querySelectorAll(".quote-card"));
-
   measure();
-  jumpToIndex(currentIndex, false);
 
-  track.addEventListener("transitionend", handleTransitionEnd);
+  // Position the track so first real card is visible
+  jumpToIndex(currentIndex, false);
 }
 
 function measure() {
@@ -161,61 +158,72 @@ function jumpToIndex(index, animate = true) {
   const tx = calcTranslate(index);
   if (!animate) {
     track.style.transition = "none";
-    track.style.transform = `translate3d(${tx}px, 0, 0)`;
+    track.style.transform = `translate3d(${tx}px,0,0)`;
     void track.offsetHeight;
     track.style.transition = "transform 0.6s ease-in-out";
   } else {
     track.style.transition = "transform 0.6s ease-in-out";
-    track.style.transform = `translate3d(${tx}px, 0, 0)`;
+    track.style.transform = `translate3d(${tx}px,0,0)`;
   }
-}
-
-function handleTransitionEnd() {
-  // If we just moved into a clone, instantly jump to the real card
-  if (currentIndex === 0) {
-    currentIndex = cards.length - 2;
-    jumpToIndex(currentIndex, false);
-  } else if (currentIndex === cards.length - 1) {
-    currentIndex = 1;
-    jumpToIndex(currentIndex, false);
-  }
-  isTransitioning = false;
 }
 
 function goNext() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  // If we’re on the second to last real card, pre-jump so there’s no gap
+  // If we're on the last real quote, pre-jump to clone first
   if (currentIndex === cards.length - 2) {
-    // Jump instantly to start clone position, then slide
-    jumpToIndex(0, false);
-    currentIndex = 1;
-    requestAnimationFrame(() => jumpToIndex(currentIndex, true));
+    jumpToIndex(cards.length - 2, false); // ensure correct alignment
+    requestAnimationFrame(() => {
+      currentIndex = cards.length - 1; // move into firstClone
+      jumpToIndex(currentIndex, true);
+      // When transition halfway done, jump instantly to real first
+      setTimeout(() => {
+        track.style.transition = "none";
+        currentIndex = 1;
+        jumpToIndex(currentIndex, false);
+        void track.offsetHeight;
+        track.style.transition = "transform 0.6s ease-in-out";
+        isTransitioning = false;
+      }, 300);
+    });
     return;
   }
 
   currentIndex++;
   jumpToIndex(currentIndex, true);
+  setTimeout(() => (isTransitioning = false), 600);
 }
 
 function goPrev() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  // If we’re on the second card, pre-jump to end clone before sliding
+  // If we're on the first real quote, pre-jump to clone last
   if (currentIndex === 1) {
-    jumpToIndex(cards.length - 1, false);
-    currentIndex = cards.length - 2;
-    requestAnimationFrame(() => jumpToIndex(currentIndex, true));
+    jumpToIndex(1, false); // ensure alignment
+    requestAnimationFrame(() => {
+      currentIndex = 0; // move into lastClone
+      jumpToIndex(currentIndex, true);
+      // Midway through animation, snap to real last
+      setTimeout(() => {
+        track.style.transition = "none";
+        currentIndex = cards.length - 2;
+        jumpToIndex(currentIndex, false);
+        void track.offsetHeight;
+        track.style.transition = "transform 0.6s ease-in-out";
+        isTransitioning = false;
+      }, 300);
+    });
     return;
   }
 
   currentIndex--;
   jumpToIndex(currentIndex, true);
+  setTimeout(() => (isTransitioning = false), 600);
 }
 
-// Init
+// Initialize
 if (track && prevBtn && nextBtn) {
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);
@@ -225,3 +233,4 @@ if (track && prevBtn && nextBtn) {
   });
   setupCarousel();
 }
+

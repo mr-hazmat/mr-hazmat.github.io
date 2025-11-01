@@ -99,8 +99,8 @@ document.addEventListener("click", function (e) {
     // Now animate to finalY
     smoothScrollTo(finalY, 450);
   }
-});// ===== Fade-in on Scroll (Reversible) =====
-const faders = document.querySelectorAll(".fade-section");
+});// ===== Reversible Fade-in on Scroll for All Sections =====
+const fadeSections = document.querySelectorAll(".fade-section");
 const fadeObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
@@ -113,9 +113,9 @@ const fadeObserver = new IntersectionObserver(
   },
   { threshold: 0.2 }
 );
-faders.forEach(el => fadeObserver.observe(el));
+fadeSections.forEach(el => fadeObserver.observe(el));
 
-// ===== Staggered Fade-in for Quote Boxes (Reversible) =====
+// ===== Staggered Fade-in for Quote Boxes (Independent + Reversible) =====
 const quoteBoxes = document.querySelectorAll(".quote-box");
 const quoteObserver = new IntersectionObserver(
   entries => {

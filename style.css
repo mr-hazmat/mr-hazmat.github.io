@@ -425,14 +425,15 @@ body {
   left: 0;
 }
 
-/* ===== Quotes Section (Full Width Panel) ===== */
+/* ===== Quotes Section (Full Width Panel with edge-aligned cards) ===== */
 .quotes-section {
   background: var(--bg-card, #fff);
   border-top: 1px solid var(--border-soft, #e5e7eb);
   border-bottom: 1px solid var(--border-soft, #e5e7eb);
   padding: 4rem 1rem;
-  text-align: center;
   width: 100vw;
+
+  /* pull the section to full browser width even if the main content is centered */
   position: relative;
   left: 50%;
   right: 50%;
@@ -440,15 +441,30 @@ body {
   margin-right: -50vw;
 }
 
-.quotes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  max-width: 1000px;
-  margin: auto;
+.quotes-inner {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
+.quotes-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* row of quotes */
+.quotes-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1.5rem;
+
+  /* match the page horizontal rhythm */
+  padding: 0 1rem;
+}
+
+/* each quote card */
 .quote-box {
+  flex: 1 1 0;
   background: var(--bg-card, #fff);
   border: 1px solid var(--border-soft, #e5e7eb);
   border-radius: 10px;
@@ -456,18 +472,28 @@ body {
   font-style: italic;
   color: var(--text-main, #111);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+  /* animation base */
   transform: translateY(20px);
   opacity: 0;
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out,
+    box-shadow 0.3s ease,
+    translate 0.3s ease;
 }
+
 .quote-box.visible {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* stagger timing */
 .quote-box:nth-child(1).visible { transition-delay: 0s; }
 .quote-box:nth-child(2).visible { transition-delay: 0.2s; }
 .quote-box:nth-child(3).visible { transition-delay: 0.4s; }
 
+/* hover lift */
 .quote-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
@@ -478,4 +504,20 @@ body {
   margin-top: 1rem;
   font-size: 0.9rem;
   color: var(--text-dim, #555);
+  font-style: normal;
+  text-align: center;
 }
+
+/* responsive tweak:
+   on narrow screens stack them vertically and center them */
+@media (max-width: 900px) {
+  .quotes-row {
+    flex-direction: column;
+    padding: 0 0.5rem;
+  }
+
+  .quote-box {
+    flex: 0 0 auto;
+  }
+}
+

@@ -99,28 +99,31 @@ document.addEventListener("click", function (e) {
     // Now animate to finalY
     smoothScrollTo(finalY, 450);
   }
-});// ===== Fade-in on Scroll (sections) =====
+});// ===== Fade-in on Scroll (Reversible) =====
 const faders = document.querySelectorAll(".fade-section");
-const observer = new IntersectionObserver(
+const fadeObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+      } else {
+        entry.target.classList.remove("is-visible");
       }
     });
   },
-  { threshold: 0.1 }
+  { threshold: 0.2 }
 );
-faders.forEach(el => observer.observe(el));
+faders.forEach(el => fadeObserver.observe(el));
 
-// ===== Staggered Fade-in for Quote Boxes =====
+// ===== Staggered Fade-in for Quote Boxes (Reversible) =====
 const quoteBoxes = document.querySelectorAll(".quote-box");
 const quoteObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add("visible");
+      } else {
+        entry.target.classList.remove("visible");
       }
     });
   },

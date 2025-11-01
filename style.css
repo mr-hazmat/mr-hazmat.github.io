@@ -387,39 +387,7 @@ body {
   line-height: 1.4;
 }
 
-/* --------------------------- */
-/* RESPONSIVE TWEAKS           */
-/* --------------------------- */
-
-@media (max-width: 800px) {
-  .hero-content {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-
-  .hero-photo {
-    order: -1;
-    display: flex;
-    justify-content: center;
-  }
-
-  .hero-photo img {
-    max-width: 220px;
-  }
-
-  .headline {
-    font-size: 1.4rem;
-  }
-
-  .tagline {
-    max-width: 100%;
-  }
-
-  .main-nav a {
-    margin-left: 0.75rem;
-    font-size: 0.85rem;
-  }
-}/* ===== Fade-in on Scroll ===== */
+/* ===== Fade-in on Scroll ===== */
 .fade-section {
   opacity: 0;
   transform: translateY(20px);
@@ -457,14 +425,21 @@ body {
   left: 0;
 }
 
-/* ===== Quotes Section (side-by-side boxes) ===== */
+/* ===== Quotes Section (Full Width Panel) ===== */
 .quotes-section {
   background: var(--bg-card, #fff);
   border-top: 1px solid var(--border-soft, #e5e7eb);
   border-bottom: 1px solid var(--border-soft, #e5e7eb);
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
   text-align: center;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
+
 .quotes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -472,6 +447,7 @@ body {
   max-width: 1000px;
   margin: auto;
 }
+
 .quote-box {
   background: var(--bg-card, #fff);
   border: 1px solid var(--border-soft, #e5e7eb);

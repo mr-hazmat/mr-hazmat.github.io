@@ -188,3 +188,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+// ------------------------------
+// Free-plan Formspree submission + redirect
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
+
+  const submitBtn = document.getElementById("submitBtn");
+  const btnText = document.getElementById("btnText");
+  const spinner = document.getElementById("spinner");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Show sending state
+    submitBtn.classList.add("sending");
+    btnText.textContent = "Sending...";
+    submitBtn.disabled = true;
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("https://formspree.io/f/mblppqzl", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        // Redirect manually to your thank-you page
+        window.location.href = "thankyou.html";
+      } else {
+        alert("There was a problem sending your message. Please try again later.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please try again later.");
+    }
+  });
+});

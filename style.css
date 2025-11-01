@@ -433,7 +433,7 @@ body {
   padding: 4rem 1rem;
   text-align: center;
 
-  /* True edge-to-edge width fix */
+  /* True edge-to-edge width trick */
   position: relative;
   left: 50%;
   right: 50%;
@@ -441,13 +441,13 @@ body {
   margin-left: -50vw;
   margin-right: -50vw;
   box-sizing: border-box;
-  overflow: hidden; /* prevent horizontal scrollbars */
+  overflow: hidden;
 }
 
 .quotes-inner {
   max-width: 1300px;
   margin: 0 auto;
-  padding: 0 3rem; /* Adds balance on wide monitors */
+  padding: 0 3rem;
 }
 
 .quotes-title {
@@ -455,7 +455,6 @@ body {
   margin-bottom: 2rem;
 }
 
-/* row of quotes */
 .quotes-row {
   display: flex;
   justify-content: space-between;
@@ -464,7 +463,6 @@ body {
   width: 100%;
 }
 
-/* each quote card */
 .quote-box {
   flex: 1 1 0;
   background: var(--bg-card, #fff);
@@ -474,6 +472,7 @@ body {
   font-style: italic;
   color: var(--text-main, #111);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
   transform: translateY(20px);
   opacity: 0;
   transition: opacity 0.8s ease-out, transform 0.8s ease-out, box-shadow 0.3s ease;
@@ -496,6 +495,8 @@ body {
   margin-top: 1rem;
   font-size: 0.9rem;
   color: var(--text-dim, #555);
+  font-style: normal;
+  text-align: center;
 }
 
 /* Responsive */
@@ -504,3 +505,4 @@ body {
     flex-direction: column;
   }
 }
+

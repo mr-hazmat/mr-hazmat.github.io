@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Contact | Your Name</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <header id="site-header" class="site-header">
+    <div class="nav-inner">
+      <div class="brand"><a href="index.html#home">Your Name</a></div>
+      <nav class="main-nav">
+        <a href="index.html#about">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="media.html">Media</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero fade-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="headline">Get In Touch</h1>
+        <p class="tagline">Have a project idea, collaboration, or question? I’d love to hear from you.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section fade-section">
+    <div class="contact-card">
+      <form class="contact-form" action="https://formspree.io/f/yourformid" method="POST">
+        <label>
+          Name:
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          Email:
+          <input type="email" name="email" required />
+        </label>
+        <label>
+          Message:
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit" class="pill-link">Send Message</button>
+      </form>
+
+      <div class="contact-info">
+        <p>You can also reach me via:</p>
+        <ul class="contact-list">
+          <li>Email: <a href="mailto:example@email.com">example@email.com</a></li>
+          <li>GitHub: <a href="#">github.com/yourusername</a></li>
+          <li>LinkedIn: <a href="#">linkedin.com/in/yourusername</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-name">Your Name</p>
+      <p class="footer-copy">© <span id="year"></span> | STEM Projects Portfolio</p>
+    </div>
+  </footer>
+</body>
+</html>

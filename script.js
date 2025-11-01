@@ -150,3 +150,21 @@ const quoteObserver = new IntersectionObserver(
 );
 
 quoteBoxes.forEach(box => quoteObserver.observe(box));
+// ------------------------------
+// Contact Form "Sending..." state
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector(".contact-form-horizontal");
+  if (!form) return; // only run on contact page
+
+  const submitBtn = form.querySelector("#submitBtn");
+
+  form.addEventListener("submit", () => {
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+      submitBtn.style.opacity = "0.7";
+      submitBtn.style.cursor = "not-allowed";
+    }
+  });
+});

@@ -419,4 +419,87 @@ body {
     margin-left: 0.75rem;
     font-size: 0.85rem;
   }
+}/* ===== Fade-in on Scroll ===== */
+.fade-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Navbar Hover Animation ===== */
+.main-nav a {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-main, #111);
+  margin-left: 1rem;
+  font-weight: 500;
+  transition: color 0.4s ease;
+}
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: var(--brand, #1a4fff);
+  transition: width 0.3s ease, left 0.3s ease;
+}
+.main-nav a:hover {
+  color: var(--brand, #1a4fff);
+}
+.main-nav a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* ===== Quotes Section (side-by-side boxes) ===== */
+.quotes-section {
+  background: var(--bg-card, #fff);
+  border-top: 1px solid var(--border-soft, #e5e7eb);
+  border-bottom: 1px solid var(--border-soft, #e5e7eb);
+  padding: 3rem 1rem;
+  text-align: center;
+}
+.quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: auto;
+}
+.quote-box {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-soft, #e5e7eb);
+  border-radius: 10px;
+  padding: 2rem;
+  font-style: italic;
+  color: var(--text-main, #111);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.quote-box.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quote-box:nth-child(1).visible { transition-delay: 0s; }
+.quote-box:nth-child(2).visible { transition-delay: 0.2s; }
+.quote-box:nth-child(3).visible { transition-delay: 0.4s; }
+
+.quote-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.quote-author {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-dim, #555);
 }

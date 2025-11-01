@@ -99,4 +99,31 @@ document.addEventListener("click", function (e) {
     // Now animate to finalY
     smoothScrollTo(finalY, 450);
   }
-});
+});// ===== Fade-in on Scroll (sections) =====
+const faders = document.querySelectorAll(".fade-section");
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.1 }
+);
+faders.forEach(el => observer.observe(el));
+
+// ===== Staggered Fade-in for Quote Boxes =====
+const quoteBoxes = document.querySelectorAll(".quote-box");
+const quoteObserver = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  },
+  { threshold: 0.3 }
+);
+quoteBoxes.forEach(box => quoteObserver.observe(box));

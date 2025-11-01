@@ -425,25 +425,29 @@ body {
   left: 0;
 }
 
-/* ===== Quotes Section (Full Width Panel with edge-aligned cards) ===== */
+/* ===== Quotes Section (true full-width bar) ===== */
 .quotes-section {
   background: var(--bg-card, #fff);
   border-top: 1px solid var(--border-soft, #e5e7eb);
   border-bottom: 1px solid var(--border-soft, #e5e7eb);
   padding: 4rem 1rem;
-  width: 100vw;
+  text-align: center;
 
-  /* pull the section to full browser width even if the main content is centered */
+  /* True edge-to-edge width fix */
   position: relative;
   left: 50%;
   right: 50%;
+  width: 100vw;
   margin-left: -50vw;
   margin-right: -50vw;
+  box-sizing: border-box;
+  overflow: hidden; /* prevent horizontal scrollbars */
 }
 
 .quotes-inner {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
+  padding: 0 3rem; /* Adds balance on wide monitors */
 }
 
 .quotes-title {
@@ -457,9 +461,7 @@ body {
   justify-content: space-between;
   align-items: stretch;
   gap: 1.5rem;
-
-  /* match the page horizontal rhythm */
-  padding: 0 1rem;
+  width: 100%;
 }
 
 /* each quote card */
@@ -472,28 +474,18 @@ body {
   font-style: italic;
   color: var(--text-main, #111);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-
-  /* animation base */
   transform: translateY(20px);
   opacity: 0;
-  transition:
-    opacity 0.8s ease-out,
-    transform 0.8s ease-out,
-    box-shadow 0.3s ease,
-    translate 0.3s ease;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out, box-shadow 0.3s ease;
 }
-
 .quote-box.visible {
   opacity: 1;
   transform: translateY(0);
 }
-
-/* stagger timing */
 .quote-box:nth-child(1).visible { transition-delay: 0s; }
 .quote-box:nth-child(2).visible { transition-delay: 0.2s; }
 .quote-box:nth-child(3).visible { transition-delay: 0.4s; }
 
-/* hover lift */
 .quote-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
@@ -504,20 +496,11 @@ body {
   margin-top: 1rem;
   font-size: 0.9rem;
   color: var(--text-dim, #555);
-  font-style: normal;
-  text-align: center;
 }
 
-/* responsive tweak:
-   on narrow screens stack them vertically and center them */
+/* Responsive */
 @media (max-width: 900px) {
   .quotes-row {
     flex-direction: column;
-    padding: 0 0.5rem;
-  }
-
-  .quote-box {
-    flex: 0 0 auto;
   }
 }
-

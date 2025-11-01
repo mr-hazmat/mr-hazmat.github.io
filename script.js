@@ -168,3 +168,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+// ------------------------------
+// Contact Form "Sending..." spinner + state
+// ------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector(".contact-form-horizontal");
+  if (!form) return; // only run on contact page
+
+  const submitBtn = form.querySelector("#submitBtn");
+  const btnText = form.querySelector("#btnText");
+  const spinner = form.querySelector("#spinner");
+
+  form.addEventListener("submit", () => {
+    if (submitBtn && btnText && spinner) {
+      submitBtn.classList.add("sending");
+      btnText.textContent = "Sending...";
+      submitBtn.disabled = true;
+      submitBtn.style.cursor = "not-allowed";
+    }
+  });
+});

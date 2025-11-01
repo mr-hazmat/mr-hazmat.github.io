@@ -38,7 +38,7 @@
   <section class="section fade-section">
     <form
       class="contact-form-horizontal"
-      action="https://formspree.io/f/yourformid"
+      action="https://formspree.io/f/mblppqzl"
       method="POST"
     >
       <h2 class="section-title">Send a Message</h2>
@@ -73,7 +73,10 @@
       <input type="hidden" name="_next" value="https://mr-hazmat.github.io/thankyou.html">
 
       <div style="text-align:center; margin-top:1.5rem;">
-        <button type="submit" class="pill-link">Send Message</button>
+        <button type="submit" class="pill-link" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="btnText">Send Message</span>
+        </button>
       </div>
     </form>
   </section>

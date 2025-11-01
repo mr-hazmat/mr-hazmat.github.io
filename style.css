@@ -727,3 +727,30 @@ body {
     height: 180px;
   }
 }
+/* ===== Spinner Button ===== */
+.spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+button.sending .spinner {
+  display: inline-block;
+}
+
+button.sending #btnText {
+  opacity: 0.8;
+}
+

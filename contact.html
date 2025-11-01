@@ -9,50 +9,65 @@
 </head>
 
 <body>
-    <header id="site-header" class="site-header">
-        <div class="nav-inner">
-          <div class="brand"><a href="index.html#home">Your Name</a></div>
-          <nav class="main-nav">
-            <a href="index.html#about">About</a>
-            <a href="projects.html">Projects</a>
-            <a href="media.html">Media</a>
-            <a href="contact.html">Contact</a>
-          </nav>
-        </div>
-      </header>
-      
+  <!-- Header -->
+  <header id="site-header" class="site-header">
+    <div class="nav-inner">
+      <div class="brand"><a href="index.html#home">Your Name</a></div>
+      <nav class="main-nav">
+        <a href="index.html#about">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="media.html">Media</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
 
   <!-- Hero -->
   <section class="hero fade-section">
     <div class="hero-content">
       <div class="hero-text">
         <h1 class="headline">Get In Touch</h1>
-        <p class="tagline">Have a project idea, collaboration, or question? I’d love to hear from you.</p>
+        <p class="tagline">Have a question, project idea, or collaboration in mind? I’d love to hear from you.</p>
       </div>
     </div>
   </section>
 
   <!-- Contact Section -->
   <section class="section fade-section">
-    <div class="contact-card">
-      <form class="contact-form" action="https://formspree.io/f/yourformid" method="POST">
-        <label>
-          Name:
-          <input type="text" name="name" required />
-        </label>
-        <label>
-          Email:
-          <input type="email" name="email" required />
-        </label>
-        <label>
-          Message:
-          <textarea name="message" rows="5" required></textarea>
-        </label>
-        <button type="submit" class="pill-link">Send Message</button>
+    <div class="contact-card contact-form-wrapper">
+      <form
+        class="contact-form"
+        action="https://formspree.io/f/yourformid"
+        method="POST"
+      >
+        <h2 class="section-title">Send a Message</h2>
+
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" placeholder="Your full name" required />
+        </div>
+
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            placeholder="Write your message here..."
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="pill-link" style="margin-top: 1rem;">Send Message</button>
       </form>
 
-      <div class="contact-info">
-        <p>You can also reach me via:</p>
+      <div class="contact-info fade-section">
+        <h2 class="section-title">Other Ways to Connect</h2>
         <ul class="contact-list">
           <li>Email: <a href="mailto:example@email.com">example@email.com</a></li>
           <li>GitHub: <a href="#">github.com/yourusername</a></li>

@@ -99,34 +99,54 @@ document.addEventListener("click", function (e) {
     // Now animate to finalY
     smoothScrollTo(finalY, 450);
   }
-});// ===== Reversible Fade-in on Scroll for All Sections =====
+});
+
+
+// ------------------------------
+// Stable fade-in animations (no flicker)
+// ------------------------------
+
+// All sections with fade effect
 const fadeSections = document.querySelectorAll(".fade-section");
+
 const fadeObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-      } else {
-        entry.target.classList.remove("is-visible");
+      const el = entry.target;
+      // Add when 30% visible; remove only if <10% visible
+      if (entry.intersectionRatio > 0.3) {
+        el.classList.add("is-visible");
+      } else if (entry.intersectionRatio < 0.1) {
+        el.classList.remove("is-visible");
       }
     });
   },
-  { threshold: 0.2 }
+  {
+    threshold: [0, 0.1, 0.3, 0.6, 1],
+  }
 );
+
 fadeSections.forEach(el => fadeObserver.observe(el));
 
-// ===== Staggered Fade-in for Quote Boxes (Independent + Reversible) =====
+
+// Quotes boxes (independent staggered fade)
 const quoteBoxes = document.querySelectorAll(".quote-box");
+
 const quoteObserver = new IntersectionObserver(
   entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      } else {
-        entry.target.classList.remove("visible");
+      const el = entry.target;
+      // Add when 40% visible; remove only if <20% visible
+      if (entry.intersectionRatio > 0.4) {
+        el.classList.add("visible");
+      } else if (entry.intersectionRatio < 0.2) {
+        el.classList.remove("visible");
       }
     });
   },
-  { threshold: 0.3 }
+  {
+    threshold: [0, 0.2, 0.4, 0.6, 1],
+  }
 );
+
 quoteBoxes.forEach(box => quoteObserver.observe(box));

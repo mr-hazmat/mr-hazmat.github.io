@@ -475,7 +475,11 @@ body {
 
   transform: translateY(20px);
   opacity: 0;
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out, box-shadow 0.3s ease;
+  transition:
+  opacity 0.8s ease-out,
+  transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+  box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+
 }
 .quote-box.visible {
   opacity: 1;

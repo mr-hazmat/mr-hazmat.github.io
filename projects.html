@@ -9,54 +9,78 @@
 </head>
 
 <body>
-    <header id="site-header" class="site-header">
-        <div class="nav-inner">
-          <div class="brand"><a href="index.html#home">Your Name</a></div>
-          <nav class="main-nav">
-            <a href="index.html#about">About</a>
-            <a href="projects.html">Projects</a>
-            <a href="media.html">Media</a>
-            <a href="contact.html">Contact</a>
-          </nav>
-        </div>
-      </header>
-      
+  <!-- Header -->
+  <header id="site-header" class="site-header">
+    <div class="nav-inner">
+      <div class="brand"><a href="index.html#home">Your Name</a></div>
+      <nav class="main-nav">
+        <a href="index.html#about">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="media.html">Media</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-  <!-- Page Hero -->
+  <!-- Hero -->
   <section class="hero fade-section">
     <div class="hero-content">
       <div class="hero-text">
         <h1 class="headline">Projects</h1>
-        <p class="tagline">A collection of hands-on STEM builds, experiments, and creative engineering projects.</p>
+        <p class="tagline">
+          A curated collection of hands-on engineering and research projects, ranging from fluid dynamics to robotics and experimental design.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- Project Cards -->
+  <!-- Projects Grid -->
   <section class="section fade-section">
+    <h2 class="section-title">Featured Projects</h2>
+
     <div class="projects-grid">
       <article class="project-card">
-        <h3 class="project-title">Wind Tunnel Mini</h3>
-        <p class="project-desc">A desktop-sized wind tunnel for testing airfoils and drag coefficients.</p>
-        <a class="project-link" href="#">View details →</a>
+        <img src="https://via.placeholder.com/800x500" alt="Wind Tunnel Mini" class="project-thumb" />
+        <div class="project-body">
+          <h3 class="project-title">Wind Tunnel Mini</h3>
+          <p class="project-desc">
+            A desktop-sized wind tunnel for testing airfoils and drag coefficients.
+          </p>
+          <a class="project-link" href="projects/project-1.html">View Project →</a>
+        </div>
       </article>
 
       <article class="project-card">
-        <h3 class="project-title">Hydro Rocket</h3>
-        <p class="project-desc">Water-powered rocket optimized for stability and altitude.</p>
-        <a class="project-link" href="#">View details →</a>
+        <img src="https://via.placeholder.com/800x500" alt="Hydro Rocket" class="project-thumb" />
+        <div class="project-body">
+          <h3 class="project-title">Hydro Rocket</h3>
+          <p class="project-desc">
+            Water-powered rocket optimized for stability and altitude performance.
+          </p>
+          <a class="project-link" href="projects/project-2.html">View Project →</a>
+        </div>
       </article>
 
       <article class="project-card">
-        <h3 class="project-title">Arduino Rover</h3>
-        <p class="project-desc">A programmable rover with sensors and Bluetooth control.</p>
-        <a class="project-link" href="#">View details →</a>
+        <img src="https://via.placeholder.com/800x500" alt="Arduino Rover" class="project-thumb" />
+        <div class="project-body">
+          <h3 class="project-title">Arduino Rover</h3>
+          <p class="project-desc">
+            A programmable rover with sensors, obstacle avoidance, and Bluetooth control.
+          </p>
+          <a class="project-link" href="projects/project-3.html">View Project →</a>
+        </div>
       </article>
 
       <article class="project-card">
-        <h3 class="project-title">3D Printed Jet Engine</h3>
-        <p class="project-desc">A functional small-scale turbine demonstrator using PLA and bearings.</p>
-        <a class="project-link" href="#">View details →</a>
+        <img src="https://via.placeholder.com/800x500" alt="3D Printed Jet Engine" class="project-thumb" />
+        <div class="project-body">
+          <h3 class="project-title">3D Printed Jet Engine</h3>
+          <p class="project-desc">
+            A functional turbine demonstrator using PLA, ball bearings, and CFD validation.
+          </p>
+          <a class="project-link" href="projects/project-4.html">View Project →</a>
+        </div>
       </article>
     </div>
   </section>
@@ -65,7 +89,9 @@
   <footer class="footer">
     <div class="footer-inner">
       <p class="footer-name">Your Name</p>
-      <p class="footer-copy">© <span id="year"></span> | STEM Projects Portfolio</p>
+      <p class="footer-copy">
+        © <span id="year"></span> | STEM Projects Portfolio
+      </p>
     </div>
   </footer>
 </body>

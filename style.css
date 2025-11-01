@@ -606,3 +606,18 @@ body {
 .contact-list li {
   margin-bottom: 0.5rem;
 }
+/* Thank You Page Animation */
+.hero-content {
+  animation: fadeUp 0.8s ease-out;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

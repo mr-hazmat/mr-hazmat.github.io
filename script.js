@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 // ------------------------------
-// Free-plan Formspree submission + redirect
+// Free-plan Formspree submission + redirect (fixed)
 // ------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contactForm");
@@ -202,30 +202,41 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Show sending state
+    // Disable + show spinner
     submitBtn.classList.add("sending");
     btnText.textContent = "Sending...";
     submitBtn.disabled = true;
 
+    // Collect data using FormData (for Formspree compatibility)
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
 
     try {
-      const res = await fetch("https://formspree.io/f/mblppqzl", {
+      const response = await fetch("https://formspree.io/f/mblppqzl", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        headers: { Accept: "application/json" },
+        body: formData
       });
 
-      if (res.ok) {
-        // Redirect manually to your thank-you page
+      if (response.ok) {
+        // ✅ Success: redirect to custom thank-you page
         window.location.href = "thankyou.html";
       } else {
-        alert("There was a problem sending your message. Please try again later.");
+        // ❌ Formspree returned an error (e.g. missing fields)
+        const data = await response.json();
+        console.error("Formspree error:", data);
+        alert(
+          data.error || "There was a problem sending your message. Please try again later."
+        );
+        submitBtn.disabled = false;
+        btnText.textContent = "Send Message";
+        submitBtn.classList.remove("sending");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Network or CORS error:", err);
       alert("Network error. Please try again later.");
+      submitBtn.disabled = false;
+      btnText.textContent = "Send Message";
+      submitBtn.classList.remove("sending");
     }
   });
 });

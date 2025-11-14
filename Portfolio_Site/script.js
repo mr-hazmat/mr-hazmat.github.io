@@ -218,10 +218,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        // ✅ Success: redirect to custom thank-you page
+        // Success: redirect to custom thank-you page
         window.location.href = "thankyou.html";
       } else {
-        // ❌ Formspree returned an error (e.g. missing fields)
+        // Formspree returned an error (e.g. missing fields)
         const data = await response.json();
         console.error("Formspree error:", data);
         alert(

@@ -1,3 +1,18 @@
+function createCapsule(x, y, width, height, options = {}) {
+    const radius = width / 2;
+    const bodyHeight = height - width;
+
+    const topCircle = Bodies.circle(x, y - bodyHeight / 2, radius, options);
+    const bottomCircle = Bodies.circle(x, y + bodyHeight / 2, radius, options);
+    const middle = Bodies.rectangle(x, y, width, bodyHeight, options);
+
+    return Matter.Body.create({
+        parts: [topCircle, bottomCircle, middle],
+        friction: 0.1,
+        frictionAir: 0.03,
+        restitution: 0
+    });
+}
 //--------------------------------------------
 // Aliases
 //--------------------------------------------
@@ -37,15 +52,14 @@ Runner.run(runner, engine);
 //--------------------------------------------
 
 // Player (light grey)
-const player = Bodies.rectangle(200, 0, 40, 60, {
+// Capsule player (40px wide, 80px tall), darker grey
+const player = createCapsule(200, 0, 40, 80, {
     label: "player",
-    friction: 0.1,
-    frictionAir: 0.02,
-    restitution: 0,
     render: {
-        fillStyle: "#d9d9d9"
+        fillStyle: "#b3b3b3"  // darker grey
     }
 });
+
 
 // Ground (white)
 const ground = Bodies.rectangle(
@@ -95,33 +109,55 @@ document.addEventListener("keyup", (e) => {
 // Movement Loop
 //--------------------------------------------
 Events.on(engine, "beforeUpdate", () => {
-    const speed = 6;
+    const groundSpeed = 6;
+    const airSpeed = 2.5;       // reduced in-air control
+    const drift = 0.98;         // slow drifting decay
 
+    // Determine if grounded
+    const isGrounded = canJump;
+
+    // Horizontal movement
     if (keys.left) {
-        Body.setVelocity(player, { x: -speed, y: player.velocity.y });
+        if (isGrounded) {
+            Body.setVelocity(player, {
+                x: -groundSpeed,
+                y: player.velocity.y
+            });
+        } else {
+            Body.setVelocity(player, {
+                x: player.velocity.x - airSpeed,
+                y: player.velocity.y
+            });
+        }
     }
+
     if (keys.right) {
-        Body.setVelocity(player, { x: speed, y: player.velocity.y });
+        if (isGrounded) {
+            Body.setVelocity(player, {
+                x: groundSpeed,
+                y: player.velocity.y
+            });
+        } else {
+            Body.setVelocity(player, {
+                x: player.velocity.x + airSpeed,
+                y: player.velocity.y
+            });
+        }
     }
+
+    // Apply drifting inertia when airborne
+    if (!isGrounded && !keys.left && !keys.right) {
+        Body.setVelocity(player, {
+            x: player.velocity.x * drift,
+            y: player.velocity.y
+        });
+    }
+
+    // Jump
     if (keys.up && canJump) {
         Body.setVelocity(player, { x: player.velocity.x, y: -15 });
         canJump = false;
     }
-});
-
-//--------------------------------------------
-// Jump Detection
-//--------------------------------------------
-Events.on(engine, "collisionStart", (event) => {
-    event.pairs.forEach((pair) => {
-        if (pair.bodyA === player || pair.bodyB === player) {
-            const other = pair.bodyA === player ? pair.bodyB : pair.bodyA;
-
-            if (other.isStatic && player.velocity.y > 0) {
-                canJump = true;
-            }
-        }
-    });
 });
 
 //--------------------------------------------

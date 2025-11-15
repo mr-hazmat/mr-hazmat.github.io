@@ -38,11 +38,7 @@ Runner.run(runner, engine);
 // World Setup
 //--------------------------------------------
 
-// Golden-ratio rectangle player
-const playerWidth = 40;
-const playerHeight = Math.round(playerWidth * 1.618); // ≈ 65
-
-const player = Bodies.rectangle(200, 0, playerWidth, playerHeight, {
+const player = Bodies.rectangle(200, 0, 40, 65, {
     label: "player",
     friction: 0,
     frictionAir: 0.015,
@@ -107,7 +103,7 @@ const camera = { x: 0, y: 0, lerp: 0.1 };
 // Movement + Camera Update
 //--------------------------------------------
 Events.on(engine, "beforeUpdate", () => {
-    // 🔒 Lock rotation
+    // Lock rotation
     Body.setAngle(player, 0);
     player.angularVelocity = 0;
 

@@ -1,6 +1,6 @@
-//--------------------------------------------
-// Capsule Helper
-//--------------------------------------------
+//--------------------------------------------//
+// Capsule Helper                             //
+//--------------------------------------------//
 function createCapsule(x, y, width, height, options = {}) {
     const radius = width / 2;
     const bodyHeight = height - width;

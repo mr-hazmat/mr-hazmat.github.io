@@ -1,10 +1,13 @@
+//--------------------------------------------
+// Capsule Helper
+//--------------------------------------------
 function createCapsule(x, y, width, height, options = {}) {
     const radius = width / 2;
     const bodyHeight = height - width;
 
-    const topCircle = Bodies.circle(x, y - bodyHeight / 2, radius, options);
-    const bottomCircle = Bodies.circle(x, y + bodyHeight / 2, radius, options);
-    const middle = Bodies.rectangle(x, y, width, bodyHeight, options);
+    const topCircle = Matter.Bodies.circle(x, y - bodyHeight / 2, radius, options);
+    const bottomCircle = Matter.Bodies.circle(x, y + bodyHeight / 2, radius, options);
+    const middle = Matter.Bodies.rectangle(x, y, width, bodyHeight, options);
 
     return Matter.Body.create({
         parts: [topCircle, bottomCircle, middle],
@@ -13,16 +16,19 @@ function createCapsule(x, y, width, height, options = {}) {
         restitution: 0
     });
 }
+
 //--------------------------------------------
 // Aliases
 //--------------------------------------------
-const Engine = Matter.Engine,
-      Render = Matter.Render,
-      Runner = Matter.Runner,
-      Bodies = Matter.Bodies,
-      Body = Matter.Body,
-      Composite = Matter.Composite,
-      Events = Matter.Events;
+const {
+    Engine,
+    Render,
+    Runner,
+    Bodies,
+    Body,
+    Composite,
+    Events
+} = Matter;
 
 //--------------------------------------------
 // Engine + Renderer
@@ -37,7 +43,7 @@ const render = Render.create({
     options: {
         width: window.innerWidth,
         height: window.innerHeight,
-        background: "#e6e6e6", // soft grey
+        background: "#e6e6e6",
         wireframes: false,
         pixelRatio: window.devicePixelRatio
     }
@@ -51,17 +57,16 @@ Runner.run(runner, engine);
 // World Setup
 //--------------------------------------------
 
-// Player (light grey)
-// Capsule player (40px wide, 80px tall), darker grey
+// Player Capsule
 const player = createCapsule(200, 0, 40, 80, {
     label: "player",
-    render: {
-        fillStyle: "#b3b3b3"  // darker grey
-    }
+    render: { fillStyle: "#b3b3b3" }
 });
 
+// Lock player rotation
+Body.setInertia(player, Infinity);
 
-// Ground (white)
+// Ground
 const ground = Bodies.rectangle(
     window.innerWidth / 2,
     window.innerHeight - 40,
@@ -69,17 +74,15 @@ const ground = Bodies.rectangle(
     80,
     {
         isStatic: true,
-        label: "ground",
         render: { fillStyle: "#ffffff" }
     }
 );
 
-// Platforms (white)
+// Platforms
 const platform1 = Bodies.rectangle(300, 400, 300, 30, {
     isStatic: true,
     render: { fillStyle: "#ffffff" }
 });
-
 const platform2 = Bodies.rectangle(700, 300, 300, 30, {
     isStatic: true,
     render: { fillStyle: "#ffffff" }
@@ -106,64 +109,95 @@ document.addEventListener("keyup", (e) => {
 });
 
 //--------------------------------------------
-// Movement Loop
+// Smooth Camera
+//--------------------------------------------
+const camera = {
+    x: 0,
+    y: 0,
+    lerp: 0.1 // smoothing factor
+};
+
+//--------------------------------------------
+// Movement + Camera Update
 //--------------------------------------------
 Events.on(engine, "beforeUpdate", () => {
-    const groundSpeed = 6;
-    const airSpeed = 2.5;       // reduced in-air control
-    const drift = 0.98;         // slow drifting decay
 
-    // Determine if grounded
+    // 🔒 Lock rotation
+    Body.setAngle(player, 0);
+    player.angularVelocity = 0;
+
     const isGrounded = canJump;
 
-    // Horizontal movement
+    // Friction-based acceleration
+    const accelGround = 1.1;
+    const accelAir = 0.4;
+
+    const maxGroundSpeed = 6;
+    const maxAirSpeed = 4;
+
+    let vel = player.velocity.x;
+
+    // LEFT
     if (keys.left) {
-        if (isGrounded) {
-            Body.setVelocity(player, {
-                x: -groundSpeed,
-                y: player.velocity.y
-            });
-        } else {
-            Body.setVelocity(player, {
-                x: player.velocity.x - airSpeed,
-                y: player.velocity.y
-            });
-        }
+        vel -= isGrounded ? accelGround : accelAir;
     }
-
+    // RIGHT
     if (keys.right) {
-        if (isGrounded) {
-            Body.setVelocity(player, {
-                x: groundSpeed,
-                y: player.velocity.y
-            });
-        } else {
-            Body.setVelocity(player, {
-                x: player.velocity.x + airSpeed,
-                y: player.velocity.y
-            });
-        }
+        vel += isGrounded ? accelGround : accelAir;
     }
 
-    // Apply drifting inertia when airborne
-    if (!isGrounded && !keys.left && !keys.right) {
-        Body.setVelocity(player, {
-            x: player.velocity.x * drift,
-            y: player.velocity.y
-        });
-    }
+    // Clamp speed
+    const speedLimit = isGrounded ? maxGroundSpeed : maxAirSpeed;
+    vel = Math.max(-speedLimit, Math.min(speedLimit, vel));
+
+    // Apply horizontal velocity
+    Body.setVelocity(player, {
+        x: vel,
+        y: player.velocity.y
+    });
 
     // Jump
     if (keys.up && canJump) {
         Body.setVelocity(player, { x: player.velocity.x, y: -15 });
         canJump = false;
     }
+
+    // Camera target = player
+    const camTargetX = player.position.x - render.options.width / 2;
+    const camTargetY = player.position.y - render.options.height / 2;
+
+    // Smooth follow
+    camera.x += (camTargetX - camera.x) * camera.lerp;
+    camera.y += (camTargetY - camera.y) * camera.lerp;
+
+    // Apply camera translation
+    render.bounds.min.x = camera.x;
+    render.bounds.min.y = camera.y;
+    render.bounds.max.x = camera.x + render.options.width;
+    render.bounds.max.y = camera.y + render.options.height;
+});
+
+//--------------------------------------------
+// Jump Detection
+//--------------------------------------------
+Events.on(engine, "collisionStart", (event) => {
+    event.pairs.forEach((pair) => {
+        if (pair.bodyA === player || pair.bodyB === player) {
+            const other = pair.bodyA === player ? pair.bodyB : pair.bodyA;
+
+            if (other.isStatic && player.velocity.y > 0) {
+                canJump = true;
+            }
+        }
+    });
 });
 
 //--------------------------------------------
 // Resize Handler
 //--------------------------------------------
 window.addEventListener("resize", () => {
+    render.options.width = window.innerWidth;
+    render.options.height = window.innerHeight;
     Render.setPixelRatio(render, window.devicePixelRatio);
 
     Body.setPosition(ground, {

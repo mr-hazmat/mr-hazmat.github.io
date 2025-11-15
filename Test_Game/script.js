@@ -1,15 +1,7 @@
 //--------------------------------------------
-// Aliases
+// Matter.js Aliases
 //--------------------------------------------
-const {
-    Engine,
-    Render,
-    Runner,
-    Bodies,
-    Body,
-    Composite,
-    Events
-} = Matter;
+const { Engine, Render, Runner, Bodies, Body, Composite, Events } = Matter;
 
 //--------------------------------------------
 // Engine + Renderer
@@ -38,16 +30,18 @@ Runner.run(runner, engine);
 // World Setup
 //--------------------------------------------
 
-const player = Bodies.rectangle(200, 0, 40, 65, {
+// Player (golden-ratio rectangle)
+const playerWidth = 40;
+const playerHeight = Math.round(playerWidth * 1.618); // ≈65
+
+const player = Bodies.rectangle(200, 0, playerWidth, playerHeight, {
     label: "player",
     friction: 0,
-    frictionAir: 0.015,
+    frictionAir: 0.012,
     restitution: 0,
     render: { fillStyle: "#b3b3b3" }
 });
-
-// Lock rotation
-Body.setInertia(player, Infinity);
+Body.setInertia(player, Infinity); // lock rotation
 
 // Ground
 const ground = Bodies.rectangle(
@@ -55,24 +49,12 @@ const ground = Bodies.rectangle(
     window.innerHeight - 40,
     window.innerWidth,
     80,
-    {
-        isStatic: true,
-        friction: 0,
-        render: { fillStyle: "#ffffff" }
-    }
+    { isStatic: true, friction: 0.2, render: { fillStyle: "#ffffff" } }
 );
 
 // Platforms
-const platform1 = Bodies.rectangle(300, 400, 300, 30, {
-    isStatic: true,
-    friction: 0,
-    render: { fillStyle: "#ffffff" }
-});
-const platform2 = Bodies.rectangle(700, 300, 300, 30, {
-    isStatic: true,
-    friction: 0,
-    render: { fillStyle: "#ffffff" }
-});
+const platform1 = Bodies.rectangle(300, 400, 300, 30, { isStatic: true, friction: 0.2, render: { fillStyle: "#ffffff" } });
+const platform2 = Bodies.rectangle(700, 300, 300, 30, { isStatic: true, friction: 0.2, render: { fillStyle: "#ffffff" } });
 
 Composite.add(engine.world, [player, ground, platform1, platform2]);
 
@@ -81,21 +63,22 @@ Composite.add(engine.world, [player, ground, platform1, platform2]);
 //--------------------------------------------
 let keys = { left: false, right: false, up: false };
 let canJump = false;
+let jumpCount = 0; // track jumps
 
-document.addEventListener("keydown", (e) => {
-    if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-    if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-    if (e.code === "ArrowUp" || e.code === "Space" || e.code === "KeyW") keys.up = true;
+document.addEventListener("keydown", e => {
+    if (["ArrowLeft","KeyA"].includes(e.code)) keys.left = true;
+    if (["ArrowRight","KeyD"].includes(e.code)) keys.right = true;
+    if (["ArrowUp","Space","KeyW"].includes(e.code)) keys.up = true;
 });
 
-document.addEventListener("keyup", (e) => {
-    if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-    if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-    if (e.code === "ArrowUp" || e.code === "Space" || e.code === "KeyW") keys.up = false;
+document.addEventListener("keyup", e => {
+    if (["ArrowLeft","KeyA"].includes(e.code)) keys.left = false;
+    if (["ArrowRight","KeyD"].includes(e.code)) keys.right = false;
+    if (["ArrowUp","Space","KeyW"].includes(e.code)) keys.up = false;
 });
 
 //--------------------------------------------
-// Smooth Camera
+// Camera
 //--------------------------------------------
 const camera = { x: 0, y: 0, lerp: 0.1 };
 
@@ -108,6 +91,9 @@ Events.on(engine, "beforeUpdate", () => {
     player.angularVelocity = 0;
 
     const isGrounded = canJump;
+
+    // Reset jump count when on ground
+    if (isGrounded) jumpCount = 0;
 
     // Friction-based acceleration
     const accelGround = 2.4;
@@ -125,13 +111,40 @@ Events.on(engine, "beforeUpdate", () => {
 
     Body.setVelocity(player, { x: vel, y: player.velocity.y });
 
-    // Jump
-    if (keys.up && canJump) {
-        Body.setVelocity(player, { x: player.velocity.x, y: -15 });
-        canJump = false;
+    // Jump logic
+    if (keys.up) {
+        if (isGrounded) {
+            Body.setVelocity(player, { x: player.velocity.x, y: -15 });
+            canJump = false;
+            jumpCount = 1;
+        } else if (jumpCount === 1) {
+            Body.setVelocity(player, { x: player.velocity.x, y: -10 }); // 2/3 jump
+            jumpCount = 2;
+        }
     }
+});
 
-    // Camera follow
+//--------------------------------------------
+// Jump detection
+//--------------------------------------------
+Events.on(engine, "collisionStart", event => {
+    event.pairs.forEach(pair => {
+        const bodies = [pair.bodyA, pair.bodyB];
+        if (bodies.includes(player)) {
+            const other = pair.bodyA === player ? pair.bodyB : pair.bodyA;
+            if (other.isStatic) {
+                const contact = pair.collision.supports[0];
+                if (contact.y > player.position.y + 10) canJump = true;
+            }
+        }
+    });
+});
+
+//--------------------------------------------
+// Camera follow & render transform
+//--------------------------------------------
+Events.on(engine, "afterUpdate", () => {
+    // Smooth camera follow
     const camTargetX = player.position.x - render.options.width / 2;
     const camTargetY = player.position.y - render.options.height / 2;
 
@@ -142,28 +155,13 @@ Events.on(engine, "beforeUpdate", () => {
     render.bounds.min.y = camera.y;
     render.bounds.max.x = camera.x + render.options.width;
     render.bounds.max.y = camera.y + render.options.height;
+
+    // Offset canvas context to simulate camera
+    render.context.setTransform(1, 0, 0, 1, -camera.x, -camera.y);
 });
 
 //--------------------------------------------
-// Jump Detection
-//--------------------------------------------
-Events.on(engine, "collisionStart", (event) => {
-    event.pairs.forEach((pair) => {
-        const bodies = [pair.bodyA, pair.bodyB];
-
-        if (bodies.includes(player)) {
-            const other = pair.bodyA === player ? pair.bodyB : pair.bodyA;
-
-            if (other.isStatic) {
-                const contact = pair.collision.supports[0];
-                if (contact.y > player.position.y + 10) canJump = true;
-            }
-        }
-    });
-});
-
-//--------------------------------------------
-// Resize Handler
+// Resize handler
 //--------------------------------------------
 window.addEventListener("resize", () => {
     render.options.width = window.innerWidth;

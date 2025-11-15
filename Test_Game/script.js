@@ -68,14 +68,50 @@ let jumpCount = 0; // track jumps
 document.addEventListener("keydown", e => {
     if (["ArrowLeft","KeyA"].includes(e.code)) keys.left = true;
     if (["ArrowRight","KeyD"].includes(e.code)) keys.right = true;
-    if (["ArrowUp","Space","KeyW"].includes(e.code)) keys.up = true;
+    if (["ArrowUp","KeyW"].includes(e.code)) keys.up = true;
 });
 
 document.addEventListener("keyup", e => {
     if (["ArrowLeft","KeyA"].includes(e.code)) keys.left = false;
     if (["ArrowRight","KeyD"].includes(e.code)) keys.right = false;
-    if (["ArrowUp","Space","KeyW"].includes(e.code)) keys.up = false;
+    if (["ArrowUp","KeyW"].includes(e.code)) keys.up = false;
 });
+
+//--------------------------------------------
+// Gun setup
+//--------------------------------------------
+let gunDirection = "right"; // "left" or "right"
+let canShoot = true;
+const shootCooldown = 200; // ms
+
+document.addEventListener("keydown", e => {
+    if (e.code === "Space" && canShoot) { // Spacebar to shoot
+        shootProjectile();
+        canShoot = false;
+        setTimeout(() => canShoot = true, shootCooldown);
+    }
+});
+
+function shootProjectile() {
+    const speed = 12;
+    const offsetX = gunDirection === "right" ? playerWidth / 2 : -playerWidth / 2;
+    const projectile = Bodies.circle(player.position.x + offsetX, player.position.y, 5, {
+        frictionAir: 0,
+        restitution: 0,
+        label: "projectile",
+        render: { fillStyle: "#ffffff" }
+    });
+
+    const velX = gunDirection === "right" ? speed : -speed;
+    Body.setVelocity(projectile, { x: velX, y: 0 });
+
+    Composite.add(engine.world, projectile);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        Composite.remove(engine.world, projectile);
+    }, 3000);
+}
 
 //--------------------------------------------
 // Camera
@@ -111,6 +147,10 @@ Events.on(engine, "beforeUpdate", () => {
 
     Body.setVelocity(player, { x: vel, y: player.velocity.y });
 
+    // Gun points left/right based on movement
+    if (vel < -0.5) gunDirection = "left";
+    if (vel > 0.5) gunDirection = "right";
+
     // Jump logic
     if (keys.up) {
         if (isGrounded) {
@@ -144,7 +184,6 @@ Events.on(engine, "collisionStart", event => {
 // Camera follow & render transform
 //--------------------------------------------
 Events.on(engine, "afterUpdate", () => {
-    // Smooth camera follow
     const camTargetX = player.position.x - render.options.width / 2;
     const camTargetY = player.position.y - render.options.height / 2;
 
@@ -156,7 +195,6 @@ Events.on(engine, "afterUpdate", () => {
     render.bounds.max.x = camera.x + render.options.width;
     render.bounds.max.y = camera.y + render.options.height;
 
-    // Offset canvas context to simulate camera
     render.context.setTransform(1, 0, 0, 1, -camera.x, -camera.y);
 });
 
